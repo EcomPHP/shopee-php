@@ -16,15 +16,27 @@ use GuzzleHttp\Middleware;
 use GuzzleHttp\RequestOptions;
 use NVuln\Shopee\Errors\ShopeeException;
 use NVuln\Shopee\Resources\Authorization;
+use NVuln\Shopee\Resources\Logistic;
+use NVuln\Shopee\Resources\Order;
+use NVuln\Shopee\Resources\Payment;
+use NVuln\Shopee\Resources\Product;
 use Psr\Http\Message\RequestInterface;
 
 /**
  * @property-read Authorization $Authorization
+ * @property-read Logistic $Logistic
+ * @property-read Order $Order
+ * @property-read Payment $Payment
+ * @property-read Product $Product
  */
 class Client
 {
     const resources = [
         Authorization::class,
+        Logistic::class,
+        Order::class,
+        Payment::class,
+        Product::class,
     ];
 
     protected $partner_id;
