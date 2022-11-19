@@ -1,0 +1,33 @@
+{
+  "name": "nvuln/shopee-php",
+  "description": "Unofficial Shopee API Client in PHP",
+  "type": "library",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "J",
+      "email": "j@sax.vn"
+    }
+  ],
+  "require": {
+    "php": "^7.2|^8.0",
+    "ext-json": "*",
+    "guzzlehttp/guzzle": "^7.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8|^9"
+  },
+  "autoload": {
+    "psr-4": {
+      "NVuln\\Shopee\\": "src"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "NVuln\\Shopee\\Tests\\": "tests"
+    }
+  },
+  "scripts": {
+    "test": "vendor/bin/phpunit"
+  }
+}
