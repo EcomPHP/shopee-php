@@ -129,7 +129,7 @@ class Client
 
         return new GuzzleHttpClient([
             'handler' => $stack,
-            'base_uri' => $this->baseUrl() . 'api/v2/',
+            'base_uri' => $this->baseUrl(),
             RequestOptions::HTTP_ERRORS => false,
         ]);
     }
@@ -155,14 +155,14 @@ class Client
     {
         switch ($this->china_region << 1 + $this->debug_mode) {
             case 1:
-                return 'https://partner.test-stable.shopeemobile.com/';
+                return 'https://partner.test-stable.shopeemobile.com/api/v2/';
             case 2:
-                return 'https://openplatform.shopee.cn/';
+                return 'https://openplatform.shopee.cn/api/v2/';
             case 3:
-                return 'https://openplatform.test-stable.shopee.cn/';
+                return 'https://openplatform.test-stable.shopee.cn/api/v2/';
             case 0:
             default:
-                return 'https://partner.shopeemobile.com/';
+                return 'https://partner.shopeemobile.com/api/v2/';
         }
     }
 }
