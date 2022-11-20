@@ -93,7 +93,7 @@ class Client
     public function __get($resourceName)
     {
         $resourceClassName = __NAMESPACE__."\\Resources\\".$resourceName;
-        if (!in_array($resourceClassName, self::resources)) {
+        if (!in_array($resourceClassName, static::resources)) {
             throw new ShopeeException("Invalid resource ".$resourceName);
         }
 
