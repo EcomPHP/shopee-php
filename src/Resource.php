@@ -34,7 +34,7 @@ abstract class Resource
                 $this->handleErrorResponse($json['error'], $json['message']);
             }
 
-            return $json['response'];
+            return $json['response'] ?? $json;
         }
 
         return $response->getBody()->getContents();
