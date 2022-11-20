@@ -28,7 +28,7 @@ class Auth
      */
     public function getToken($code, $shop_id)
     {
-        return $this->client->Authorization->getToken($code, $shop_id);
+        return $this->client->Authorization->getToken($code, $shop_id, $this->client->partnerId());
     }
 
     /**
@@ -42,7 +42,7 @@ class Auth
      */
     public function refreshNewToken($refresh_token, $shop_id)
     {
-        return $this->client->Authorization->refreshNewToken($refresh_token, $shop_id);
+        return $this->client->Authorization->refreshNewToken($refresh_token, $shop_id, $this->client->partnerId());
     }
 
     public function createAuthRequest($redirect_uri, $return_url = false)

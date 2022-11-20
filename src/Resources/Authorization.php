@@ -22,12 +22,13 @@ class Authorization extends Resource
      * @param $shop_id
      * @return mixed
      */
-    public function getToken($code, $shop_id)
+    public function getToken($code, $shop_id, $partner_id)
     {
         return $this->call('POST', 'token/get', [
             RequestOptions::JSON => [
                 'code' => $code,
                 'shop_id' => intval($shop_id),
+                'partner_id' => intval($partner_id),
             ]
         ]);
     }
@@ -37,12 +38,13 @@ class Authorization extends Resource
      * @param $shop_id
      * @return mixed
      */
-    public function refreshNewToken($refresh_token, $shop_id)
+    public function refreshNewToken($refresh_token, $shop_id, $partner_id)
     {
         return $this->call('POST', 'access_token/get', [
             RequestOptions::JSON => [
                 'refresh_token' => $refresh_token,
                 'shop_id' => intval($shop_id),
+                'partner_id' => intval($partner_id),
             ]
         ]);
     }
