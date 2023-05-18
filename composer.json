@@ -1,5 +1,5 @@
 {
-  "name": "nvuln/shopee-php",
+  "name": "ecomphp/shopee-php",
   "description": "Unofficial Shopee API Client in PHP",
   "type": "library",
   "license": "Apache-2.0",
