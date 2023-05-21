@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace NVuln\Shopee;
+namespace EcomPHP\Shopee;
 
 class Auth
 {

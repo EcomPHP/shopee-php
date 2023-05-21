@@ -8,19 +8,19 @@
  * file that was distributed with this source code.
  */
 
-namespace NVuln\Shopee;
+namespace EcomPHP\Shopee;
 
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\RequestOptions;
-use NVuln\Shopee\Errors\ShopeeException;
-use NVuln\Shopee\Resources\Authorization;
-use NVuln\Shopee\Resources\Logistic;
-use NVuln\Shopee\Resources\Order;
-use NVuln\Shopee\Resources\Payment;
-use NVuln\Shopee\Resources\Product;
-use NVuln\Shopee\Resources\Shop;
+use EcomPHP\Shopee\Errors\ShopeeException;
+use EcomPHP\Shopee\Resources\Authorization;
+use EcomPHP\Shopee\Resources\Logistic;
+use EcomPHP\Shopee\Resources\Order;
+use EcomPHP\Shopee\Resources\Payment;
+use EcomPHP\Shopee\Resources\Product;
+use EcomPHP\Shopee\Resources\Shop;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -101,7 +101,7 @@ class Client
         }
 
         //Initiate the resource object
-        /** @var \NVuln\Shopee\Resource $resource */
+        /** @var \EcomPHP\Shopee\Resource $resource */
         $resource = new $resourceClassName();
         $resource->useHttpClient($this->httpClient());
 

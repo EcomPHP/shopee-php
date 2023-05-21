@@ -19,12 +19,12 @@
   },
   "autoload": {
     "psr-4": {
-      "NVuln\\Shopee\\": "src"
+      "EcomPHP\\Shopee\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "NVuln\\Shopee\\Tests\\": "tests"
+      "EcomPHP\\Shopee\\Tests\\": "tests"
     }
   },
   "scripts": {

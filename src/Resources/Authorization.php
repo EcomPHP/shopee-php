@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace NVuln\Shopee\Resources;
+namespace EcomPHP\Shopee\Resources;
 
 use GuzzleHttp\RequestOptions;
-use NVuln\Shopee\Resource;
+use EcomPHP\Shopee\Resource;
 
 class Authorization extends Resource
 {
