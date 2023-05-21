@@ -20,6 +20,7 @@ use NVuln\Shopee\Resources\Logistic;
 use NVuln\Shopee\Resources\Order;
 use NVuln\Shopee\Resources\Payment;
 use NVuln\Shopee\Resources\Product;
+use NVuln\Shopee\Resources\Shop;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -28,6 +29,7 @@ use Psr\Http\Message\RequestInterface;
  * @property-read Order $Order
  * @property-read Payment $Payment
  * @property-read Product $Product
+ * @property-read Shop $Shop
  */
 class Client
 {
@@ -37,6 +39,7 @@ class Client
         Order::class,
         Payment::class,
         Product::class,
+        Shop::class,
     ];
 
     protected $partner_id;
