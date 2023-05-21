@@ -15,8 +15,6 @@ use EcomPHP\Shopee\Resource;
 
 class Authorization extends Resource
 {
-    protected $prefix = 'auth';
-
     /**
      * @param $code
      * @param $shop_id
@@ -24,7 +22,7 @@ class Authorization extends Resource
      */
     public function getToken($code, $shop_id, $partner_id)
     {
-        return $this->call('POST', 'token/get', [
+        return $this->call('POST', 'auth/token/get', [
             RequestOptions::JSON => [
                 'code' => $code,
                 'shop_id' => intval($shop_id),
@@ -40,7 +38,7 @@ class Authorization extends Resource
      */
     public function refreshNewToken($refresh_token, $shop_id, $partner_id)
     {
-        return $this->call('POST', 'access_token/get', [
+        return $this->call('POST', 'auth/access_token/get', [
             RequestOptions::JSON => [
                 'refresh_token' => $refresh_token,
                 'shop_id' => intval($shop_id),

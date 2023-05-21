@@ -15,8 +15,6 @@ use EcomPHP\Shopee\Resource;
 
 class Payment extends Resource
 {
-    protected $prefix = 'payment';
-
     /**
      * API: v2.payment.get_escrow_detail
      * Use this api to get escrow detail of order
@@ -26,7 +24,7 @@ class Payment extends Resource
      */
     public function getEscrowDetail($order_sn)
     {
-        return $this->call('GET', 'get_escrow_detail', [
+        return $this->call('GET', 'payment/get_escrow_detail', [
             RequestOptions::QUERY => [
                 'order_sn' => $order_sn,
             ],

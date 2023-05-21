@@ -15,8 +15,6 @@ use EcomPHP\Shopee\Resource;
 
 class Order extends Resource
 {
-    protected $prefix = 'order';
-
     /**
      * API: v2.order.get_order_list
      * Use this api to search orders.
@@ -33,7 +31,7 @@ class Order extends Resource
             'page_size' => 20,
         ], $params);
 
-        return $this->call('GET', 'get_order_list', [
+        return $this->call('GET', 'order/get_order_list', [
             RequestOptions::QUERY => $params,
         ]);
     }
@@ -48,7 +46,7 @@ class Order extends Resource
     public function getShipmentList($params = [])
     {
         $params['page_size'] = 20;
-        return $this->call('GET', 'get_shipment_list', [
+        return $this->call('GET', 'order/get_shipment_list', [
             RequestOptions::QUERY => $params,
         ]);
     }
@@ -69,7 +67,7 @@ class Order extends Resource
 
         $params['order_sn_list'] = $ids;
 
-        return $this->call('GET', 'get_order_detail', [
+        return $this->call('GET', 'order/get_order_detail', [
             RequestOptions::QUERY => $params,
         ]);
     }

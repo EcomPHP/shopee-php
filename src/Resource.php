@@ -18,8 +18,6 @@ abstract class Resource
 {
     protected $httpClient;
 
-    protected $prefix = '';
-
     public function useHttpClient(Client $client)
     {
         $this->httpClient = $client;
@@ -27,7 +25,7 @@ abstract class Resource
 
     public function call($method, $action, $options = [])
     {
-        $response = $this->httpClient->request($method, $this->prefix.'/'.$action, $options);
+        $response = $this->httpClient->request($method, $action, $options);
         $json = json_decode($response->getBody()->getContents(), true);
         if (is_array($json)) {
             if (isset($json['error']) && $json['error']) {

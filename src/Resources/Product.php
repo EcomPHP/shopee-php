@@ -15,11 +15,9 @@ use EcomPHP\Shopee\Resource;
 
 class Product extends Resource
 {
-    protected $prefix = 'product';
-
     public function getModelList($item_id)
     {
-        return $this->call('GET', 'get_model_list', [
+        return $this->call('GET', 'product/get_model_list', [
             RequestOptions::QUERY => [
                 'item_id' => $item_id
             ],
@@ -34,7 +32,7 @@ class Product extends Resource
             'item_status' => 'NORMAL',
         ], $params);
 
-        return $this->call('GET', 'get_item_list', [
+        return $this->call('GET', 'product/get_item_list', [
             RequestOptions::QUERY => $params,
         ]);
     }
@@ -47,7 +45,7 @@ class Product extends Resource
             'need_complaint_policy' => boolval($need_complaint_policy),
         ];
 
-        return $this->call('GET', 'get_item_base_info', [
+        return $this->call('GET', 'product/get_item_base_info', [
             RequestOptions::QUERY => $params,
         ]);
     }
@@ -58,14 +56,14 @@ class Product extends Resource
             'item_id_list' => is_array($item_id_list) ? $item_id_list : [$item_id_list],
         ];
 
-        return $this->call('POST', 'boost_item', [
+        return $this->call('POST', 'product/boost_item', [
             RequestOptions::JSON => $params,
         ]);
     }
 
     public function getBoostedList()
     {
-        return $this->call('GET', 'get_boosted_list');
+        return $this->call('GET', 'product/get_boosted_list');
     }
 
     public function getComment($params = [])
@@ -75,14 +73,14 @@ class Product extends Resource
             'page_size' => 20,
         ], $params);
 
-        return $this->call('GET', 'get_comment', [
+        return $this->call('GET', 'product/get_comment', [
             RequestOptions::QUERY => $params,
         ]);
     }
 
     public function replyComment($comment_id, $comment)
     {
-        return $this->call('POST', 'reply_comment', [
+        return $this->call('POST', 'product/reply_comment', [
             RequestOptions::JSON => [
                 'comment_list' => [
                     [

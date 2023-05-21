@@ -15,8 +15,6 @@ use EcomPHP\Shopee\Resource;
 
 class Logistic extends Resource
 {
-    protected $prefix = 'logistics';
-
     /**
      * API: v2.logistics.get_tracking_number
      * Use this api to get tracking_number when you have shipped order.
@@ -28,7 +26,7 @@ class Logistic extends Resource
     public function getTrackingNumber($order_id, $params = [])
     {
         $params['order_sn'] = $order_id;
-        return $this->call('GET', 'get_tracking_number', [
+        return $this->call('GET', 'logistics/get_tracking_number', [
             RequestOptions::QUERY => $params,
         ]);
     }
@@ -43,7 +41,7 @@ class Logistic extends Resource
             }, $order_sn_list)
         ], $params);
 
-        return $this->call('POST', 'get_shipping_document_result', [
+        return $this->call('POST', 'logistics/get_shipping_document_result', [
             RequestOptions::JSON => $params,
         ]);
     }
@@ -58,7 +56,7 @@ class Logistic extends Resource
             }, $order_sn_list)
         ], $params);
 
-        return $this->call('POST', 'download_shipping_document', [
+        return $this->call('POST', 'logistics/download_shipping_document', [
             RequestOptions::JSON => $params,
         ]);
     }
@@ -73,7 +71,7 @@ class Logistic extends Resource
             }, $order_sn_list)
         ], $params);
 
-        return $this->call('POST', 'create_shipping_document', [
+        return $this->call('POST', 'logistics/create_shipping_document', [
             RequestOptions::JSON => $params,
         ]);
     }
