@@ -33,7 +33,7 @@ use Psr\Http\Message\RequestInterface;
  */
 class Client
 {
-    const resources = [
+    protected $resources = [
         Authorization::class,
         Logistic::class,
         Order::class,
@@ -96,7 +96,7 @@ class Client
     public function __get($resourceName)
     {
         $resourceClassName = __NAMESPACE__."\\Resources\\".$resourceName;
-        if (!in_array($resourceClassName, static::resources)) {
+        if (!in_array($resourceClassName, $this->resources)) {
             throw new ShopeeException("Invalid resource ".$resourceName);
         }
 
