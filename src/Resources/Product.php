@@ -24,13 +24,17 @@ class Product extends Resource
         ]);
     }
 
-    public function getItemList($params)
+    public function getItemList($params = [])
     {
-        $params = array_merge([
-            'offset' => 0,
-            'page_size' => 20,
-            'item_status' => 'NORMAL',
-        ], $params);
+        // if you want to search multiple item status, please pass params as string, pass an array will be serialized by the http_build_query function and it may skip duplicate params
+        // ex: offset=0&page_size=20&item_status=NORMAL&item_status=BANNED
+        if (is_array($params) || !$params) {
+            $params = array_merge([
+                'offset' => 0,
+                'page_size' => 20,
+                'item_status' => 'NORMAL',
+            ], $params);
+        }
 
         return $this->call('GET', 'product/get_item_list', [
             RequestOptions::QUERY => $params,

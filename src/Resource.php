@@ -16,6 +16,7 @@ use EcomPHP\Shopee\Errors\ShopeeException;
 
 abstract class Resource
 {
+    /** @var Client */
     protected $httpClient;
 
     public function useHttpClient(Client $client)
