@@ -97,12 +97,33 @@ class Client
     {
         $resourceClassName = __NAMESPACE__."\\Resources\\".$resourceName;
         if (!in_array($resourceClassName, $this->resources)) {
+            $resourceClassName = null;
+            foreach ($this->resources as $resource) {
+                // skip class in resources folder
+                if (strpos($resource, __NAMESPACE__."\\Resources\\") == 0) {
+                    continue;
+                }
+
+                // find external resource
+                $lookup = "\\".$resourceName;
+                if (0 === substr_compare($resource, $lookup, - strlen($lookup))) {
+                    $resourceClassName = $resource;
+                    break;
+                }
+            }
+        }
+
+        if ($resourceClassName === null) {
             throw new ShopeeException("Invalid resource ".$resourceName);
         }
 
         //Initiate the resource object
         /** @var \EcomPHP\Shopee\Resource $resource */
         $resource = new $resourceClassName();
+        if (!$resource instanceof Resource) {
+            throw new ShopeeException("Invalid resource object ".$resourceName);
+        }
+
         $resource->useHttpClient($this->httpClient());
 
         return $resource;
