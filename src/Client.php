@@ -100,7 +100,7 @@ class Client
             $resourceClassName = null;
             foreach ($this->resources as $resource) {
                 // skip class in resources folder
-                if (strpos($resource, __NAMESPACE__."\\Resources\\") == 0) {
+                if (strpos($resource, __NAMESPACE__."\\Resources\\") === 0) {
                     continue;
                 }
 
