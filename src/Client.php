@@ -158,6 +158,23 @@ class Client
         ]);
     }
 
+    public function validatePushMechanismRequest($webhook_receive_url = null, $throw = true)
+    {
+        if (!$webhook_receive_url) {
+            $webhook_receive_url = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+        }
+
+        $stringToBeSigned = $webhook_receive_url . '|' . file_get_contents('php://input');
+        $sign = hash_hmac('sha256', $stringToBeSigned, $this->partnerKey());
+
+        $isValid = hash_equals($_SERVER['HTTP_AUTHORIZATION'], $sign);
+        if (!$isValid && $throw) {
+            throw new ShopeeException("Invalid signature");
+        }
+
+        return $isValid;
+    }
+
     public function prepareSignature($path, &$query)
     {
         // remove access_token and shop_id on auth request
