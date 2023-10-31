@@ -15,6 +15,58 @@ use EcomPHP\Shopee\Resource;
 
 class Product extends Resource
 {
+    public function getCategory($params = [])
+    {
+        return $this->call('GET', 'product/get_category', [
+            RequestOptions::QUERY => $params,
+        ]);
+    }
+
+    public function getAttributes($category_id, $language = null)
+    {
+        $params = [
+            'category_id' => $category_id,
+        ];
+
+        if ($language) {
+            $params['language'] = $language;
+        }
+
+        return $this->call('GET', 'product/get_attributes', [
+            RequestOptions::QUERY => $params,
+        ]);
+    }
+
+    public function getAttributeTree($category_id_list, $language = null)
+    {
+        $params = [
+            'category_id_list' => implode(',', is_array($category_id_list) ? $category_id_list : [$category_id_list]),
+        ];
+
+        if ($language) {
+            $params['language'] = $language;
+        }
+
+        return $this->call('GET', 'product/get_attribute_tree', [
+            RequestOptions::QUERY => $params,
+        ]);
+    }
+
+    public function getBrandList($category_id, $params = [])
+    {
+        $params = array_merge([
+            'offset' => 0,
+            'page_size' => 10,
+            'status' => 1,
+        ], $params);
+
+        $params['category_id'] = $category_id;
+
+        return $this->call('GET', 'product/get_brand_list', [
+            RequestOptions::QUERY => $params,
+        ]);
+    }
+
     public function getModelList($item_id)
     {
         return $this->call('GET', 'product/get_model_list', [
@@ -99,6 +151,50 @@ class Product extends Resource
     public function addItem($params)
     {
         return $this->call('POST', 'product/add_item', [
+            RequestOptions::JSON => $params,
+        ]);
+    }
+
+    public function updateItem($item_id, $params = [])
+    {
+        $params['item_id'] = $item_id;
+
+        return $this->call('POST', 'product/update_item', [
+            RequestOptions::JSON => $params,
+        ]);
+    }
+
+    public function deleteItem($item_id)
+    {
+        return $this->call('POST', 'product/delete_item', [
+            RequestOptions::JSON => [
+                'item_id' => $item_id,
+            ],
+        ]);
+    }
+
+    public function initTierVariation($item_id, $tier_variation, $model)
+    {
+        $params = [
+            'item_id' => $item_id,
+            'tier_variation' => $tier_variation,
+            'model' => $model,
+        ];
+
+        return $this->call('POST', 'product/init_tier_variations', [
+            RequestOptions::JSON => $params,
+        ]);
+    }
+
+    public function updateTierVariation($item_id, $tier_variation, $model_list)
+    {
+        $params = [
+            'item_id' => $item_id,
+            'tier_variation' => $tier_variation,
+            'model_list' => $model_list,
+        ];
+
+        return $this->call('POST', 'product/update_tier_variations', [
             RequestOptions::JSON => $params,
         ]);
     }
