@@ -95,4 +95,23 @@ class Product extends Resource
             ]
         ]);
     }
+
+    public function addItem($params)
+    {
+        return $this->call('POST', 'product/add_item', [
+            RequestOptions::JSON => $params,
+        ]);
+    }
+
+    public function addModel($item_id, $model_list)
+    {
+        $params = [
+            'item_id' => $item_id,
+            'model_list' => $model_list,
+        ];
+
+        return $this->call('POST', 'product/add_model', [
+            RequestOptions::JSON => $params,
+        ]);
+    }
 }
