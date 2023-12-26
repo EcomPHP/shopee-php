@@ -14,10 +14,18 @@ use Exception;
 
 class ShopeeException extends Exception
 {
-    public function __construct($message = "", $code = "")
+    protected $response;
+
+    public function __construct($message = "", $code = "", $response = "")
     {
         parent::__construct($message);
 
         $this->code = $code;
+        $this->response = $response;
+    }
+
+    public function getResponse()
+    {
+        return $this->response;
     }
 }

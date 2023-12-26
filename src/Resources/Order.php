@@ -71,4 +71,30 @@ class Order extends Resource
             RequestOptions::QUERY => $params,
         ]);
     }
+
+    /**
+     * API: v2.order.get_buyer_invoice_info
+     * Use this api to get buyer invoice info.
+     *
+     * @param $order_sn_list
+     * @return array|mixed
+     */
+    public function getBuyerInvoiceInfo($order_sn_list)
+    {
+        if (is_string($order_sn_list)) {
+            $order_sn_list = [$order_sn_list];
+        }
+
+        $params = [
+            'queries' => array_map(function ($order_sn) {
+                return [
+                    'order_sn' => $order_sn,
+                ];
+            }, $order_sn_list)
+        ];
+
+        return $this->call('POST', 'order/get_buyer_invoice_info', [
+            RequestOptions::JSON => $params,
+        ]);
+    }
 }

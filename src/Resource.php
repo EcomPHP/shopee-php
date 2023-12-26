@@ -30,7 +30,7 @@ abstract class Resource
         $json = json_decode($response->getBody()->getContents(), true);
         if (is_array($json)) {
             if (isset($json['error']) && $json['error']) {
-                $this->handleErrorResponse($json['error'], $json['message']);
+                $this->handleErrorResponse($json['error'], $json['message'], $json);
             }
 
             return $json['response'] ?? $json;
@@ -39,12 +39,12 @@ abstract class Resource
         return $response->getBody()->getContents();
     }
 
-    protected function handleErrorResponse($error_code, $error_message)
+    protected function handleErrorResponse($error_code, $error_message, $response)
     {
         if ($error_code == 'error_auth') {
             throw new AuthorizationException($error_message, $error_code);
         }
 
-        throw new ShopeeException($error_message, $error_code);
+        throw new ShopeeException($error_message, $error_code, $response);
     }
 }
