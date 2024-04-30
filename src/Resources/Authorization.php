@@ -18,6 +18,7 @@ class Authorization extends Resource
     /**
      * @param $code
      * @param $shop_id
+     * @param $partner_id
      * @return mixed
      */
     public function getToken($code, $shop_id, $partner_id)
@@ -34,6 +35,7 @@ class Authorization extends Resource
     /**
      * @param $refresh_token
      * @param $shop_id
+     * @param $partner_id
      * @return mixed
      */
     public function refreshNewToken($refresh_token, $shop_id, $partner_id)
