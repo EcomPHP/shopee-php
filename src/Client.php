@@ -10,6 +10,7 @@
 
 namespace EcomPHP\Shopee;
 
+use EcomPHP\Shopee\Resources\Ads;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -34,6 +35,7 @@ use Psr\Http\Message\RequestInterface;
 class Client
 {
     protected $resources = [
+        Ads::class,
         Authorization::class,
         Logistic::class,
         Order::class,
