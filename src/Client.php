@@ -11,6 +11,7 @@
 namespace EcomPHP\Shopee;
 
 use EcomPHP\Shopee\Resources\Ads;
+use EcomPHP\Shopee\Resources\Chat;
 use EcomPHP\Shopee\Resources\MediaSpace;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\HandlerStack;
@@ -38,6 +39,7 @@ class Client
     protected $resources = [
         Ads::class,
         Authorization::class,
+        Chat::class,
         Logistic::class,
         Order::class,
         Payment::class,
