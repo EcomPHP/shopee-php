@@ -28,12 +28,16 @@ use EcomPHP\Shopee\Resources\Shop;
 use Psr\Http\Message\RequestInterface;
 
 /**
+ * @property-read Ads $Ads
  * @property-read Authorization $Authorization
+ * @property-read Chat $Chat
  * @property-read Logistic $Logistic
  * @property-read Order $Order
  * @property-read Payment $Payment
  * @property-read Product $Product
  * @property-read Shop $Shop
+ * @property-read MediaSpace $MediaSpace
+ * @property-read Merchant $Merchant
  */
 class Client
 {
