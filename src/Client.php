@@ -13,6 +13,7 @@ namespace EcomPHP\Shopee;
 use EcomPHP\Shopee\Resources\Ads;
 use EcomPHP\Shopee\Resources\Chat;
 use EcomPHP\Shopee\Resources\MediaSpace;
+use EcomPHP\Shopee\Resources\Merchant;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -46,6 +47,7 @@ class Client
         Product::class,
         Shop::class,
         MediaSpace::class,
+        Merchant::class,
     ];
 
     protected $partner_id;
