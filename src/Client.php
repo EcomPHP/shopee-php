@@ -10,6 +10,7 @@
 
 namespace EcomPHP\Shopee;
 
+use EcomPHP\Shopee\Resources\AccountHealth;
 use EcomPHP\Shopee\Resources\Ads;
 use EcomPHP\Shopee\Resources\Chat;
 use EcomPHP\Shopee\Resources\MediaSpace;
@@ -31,6 +32,7 @@ use Psr\Http\Message\RequestInterface;
 /**
  * @property-read Ads $Ads
  * @property-read Authorization $Authorization
+ * @property-read AccountHealth $AccountHealth
  * @property-read Chat $Chat
  * @property-read Logistic $Logistic
  * @property-read Order $Order
@@ -46,6 +48,7 @@ class Client
     protected $resources = [
         Ads::class,
         Authorization::class,
+        AccountHealth::class,
         Chat::class,
         Logistic::class,
         Order::class,
