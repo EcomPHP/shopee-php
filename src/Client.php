@@ -14,6 +14,7 @@ use EcomPHP\Shopee\Resources\Ads;
 use EcomPHP\Shopee\Resources\Chat;
 use EcomPHP\Shopee\Resources\MediaSpace;
 use EcomPHP\Shopee\Resources\Merchant;
+use EcomPHP\Shopee\Resources\Push;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
@@ -38,6 +39,7 @@ use Psr\Http\Message\RequestInterface;
  * @property-read Shop $Shop
  * @property-read MediaSpace $MediaSpace
  * @property-read Merchant $Merchant
+ * @property-read Push $Push
  */
 class Client
 {
@@ -52,6 +54,7 @@ class Client
         Shop::class,
         MediaSpace::class,
         Merchant::class,
+        Push::class,
     ];
 
     protected $partner_id;
