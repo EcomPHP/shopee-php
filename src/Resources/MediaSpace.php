@@ -91,11 +91,27 @@ class MediaSpace extends Resource
      */
     public function uploadImage($image, $scene = null, $ratio = null)
     {
+        $filename = 'image.jpg';
+        if ($image instanceof \SplFileInfo) {
+            $filename = $image->getFilename();
+            $image = file_get_contents($image->getPathname());
+        }
+
         return $this->call('POST', 'media_space/upload_image', [
-            RequestOptions::JSON => [
-                'image' => $image,
-                'scene' => $scene,
-                'ratio' => $ratio,
+            RequestOptions::MULTIPART => [
+                [
+                    'name' => 'file',
+                    'contents' => $image,
+                    'filename' => $filename,
+                ],
+                [
+                    'name' => 'scene',
+                    'contents' => $scene,
+                ],
+                [
+                    'name' => 'ratio',
+                    'contents' => $ratio,
+                ]
             ]
         ]);
     }
