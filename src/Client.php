@@ -17,6 +17,7 @@ use EcomPHP\Shopee\Resources\Ads;
 use EcomPHP\Shopee\Resources\BundleDeal;
 use EcomPHP\Shopee\Resources\Chat;
 use EcomPHP\Shopee\Resources\Discount;
+use EcomPHP\Shopee\Resources\FirstMile;
 use EcomPHP\Shopee\Resources\FollowPrize;
 use EcomPHP\Shopee\Resources\MediaSpace;
 use EcomPHP\Shopee\Resources\Merchant;
@@ -48,6 +49,7 @@ use Psr\Http\Message\RequestInterface;
  * @property-read Payment $Payment
  * @property-read Product $Product
  * @property-read Shop $Shop
+ * @property-read FirstMile $FirstMile
  * @property-read Discount $Discount
  * @property-read BundleDeal $BundleDeal
  * @property-read AddOnDeal $AddOnDeal
@@ -72,6 +74,7 @@ class Client
         Payment::class,
         Product::class,
         Shop::class,
+        FirstMile::class,
         Discount::class,
         BundleDeal::class,
         AddOnDeal::class,
