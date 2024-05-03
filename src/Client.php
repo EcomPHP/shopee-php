@@ -14,6 +14,7 @@ use EcomPHP\Shopee\Errors\AuthorizationException;
 use EcomPHP\Shopee\Resources\AccountHealth;
 use EcomPHP\Shopee\Resources\Ads;
 use EcomPHP\Shopee\Resources\Chat;
+use EcomPHP\Shopee\Resources\FollowPrize;
 use EcomPHP\Shopee\Resources\MediaSpace;
 use EcomPHP\Shopee\Resources\Merchant;
 use EcomPHP\Shopee\Resources\Push;
@@ -43,6 +44,7 @@ use Psr\Http\Message\RequestInterface;
  * @property-read Payment $Payment
  * @property-read Product $Product
  * @property-read Shop $Shop
+ * @property-read FollowPrize $FollowPrize
  * @property-read TopPicks $TopPicks
  * @property-read ShopCategory $ShopCategory
  * @property-read Returns $Returns
@@ -62,6 +64,7 @@ class Client
         Payment::class,
         Product::class,
         Shop::class,
+        FollowPrize::class,
         TopPicks::class,
         ShopCategory::class,
         Returns::class,
