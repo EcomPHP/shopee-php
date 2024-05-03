@@ -10,6 +10,7 @@
 
 namespace EcomPHP\Shopee;
 
+use EcomPHP\Shopee\Errors\AuthorizationException;
 use EcomPHP\Shopee\Resources\AccountHealth;
 use EcomPHP\Shopee\Resources\Ads;
 use EcomPHP\Shopee\Resources\Chat;
@@ -154,7 +155,7 @@ class Client
             throw new ShopeeException("Invalid resource object ".$resourceName);
         }
 
-        $resource->useHttpClient($this->httpClient());
+        $resource->useApiClient($this);
 
         return $resource;
     }
@@ -188,10 +189,42 @@ class Client
         ]);
     }
 
+    public function call($method, $api, $options = [])
+    {
+        // trim prefix api/v2/
+        $api = trim($api, '/');
+        if (strpos($api, 'api/v2/') === 0) {
+            $api = substr($api, 7);
+        }
+
+        $response = $this->httpClient()->request($method, $api, $options);
+        $body = $response->getBody()->getContents();
+
+        $json = json_decode($body, true);
+        if (is_array($json)) {
+            if (isset($json['error']) && $json['error']) {
+                $this->handleErrorResponse($json['error'], $json['message'], $json);
+            }
+
+            return $json['response'] ?? $json;
+        }
+
+        return $body;
+    }
+
+    protected function handleErrorResponse($error_code, $error_message, $response)
+    {
+        if ($error_code == 'error_auth') {
+            throw new AuthorizationException($error_message, $error_code);
+        }
+
+        throw new ShopeeException($error_message, $error_code, $response);
+    }
+
     public function validatePushMechanismRequest($webhook_receive_url = null, $throw = true)
     {
         if (!$webhook_receive_url) {
-            $webhook_receive_url = (empty($_SERVER['HTTPS']) ? 'http' : 'https') . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+            $webhook_receive_url = sprintf('%s://%s%s', empty($_SERVER['HTTPS']) ? 'http' : 'https', $_SERVER['HTTP_HOST'], $_SERVER['REQUEST_URI']);
         }
 
         $stringToBeSigned = $webhook_receive_url . '|' . file_get_contents('php://input');
