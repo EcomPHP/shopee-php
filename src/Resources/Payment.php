@@ -189,4 +189,24 @@ class Payment extends Resource
             RequestOptions::QUERY => $params,
         ]);
     }
+
+    /**
+     * API: v2.payment.get_payout_info
+     */
+    public function getPayoutInfo($params = [])
+    {
+        return $this->call('GET', 'payment/get_payout_info', [
+            RequestOptions::QUERY => $params,
+        ]);
+    }
+
+    /**
+     * API: v2.payment.get_billing_transaction_info
+     */
+    public function getBillingTransactionInfo($params = [])
+    {
+        return $this->call('POST', 'payment/get_billing_transaction_info', [
+            RequestOptions::JSON => $params,
+        ]);
+    }
 }
