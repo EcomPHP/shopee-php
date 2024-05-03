@@ -12,6 +12,7 @@ namespace EcomPHP\Shopee;
 
 use EcomPHP\Shopee\Errors\AuthorizationException;
 use EcomPHP\Shopee\Resources\AccountHealth;
+use EcomPHP\Shopee\Resources\AddOnDeal;
 use EcomPHP\Shopee\Resources\Ads;
 use EcomPHP\Shopee\Resources\Chat;
 use EcomPHP\Shopee\Resources\FollowPrize;
@@ -45,6 +46,7 @@ use Psr\Http\Message\RequestInterface;
  * @property-read Payment $Payment
  * @property-read Product $Product
  * @property-read Shop $Shop
+ * @property-read AddOnDeal $AddOnDeal
  * @property-read Voucher $Voucher
  * @property-read FollowPrize $FollowPrize
  * @property-read TopPicks $TopPicks
@@ -66,6 +68,7 @@ class Client
         Payment::class,
         Product::class,
         Shop::class,
+        AddOnDeal::class,
         Voucher::class,
         FollowPrize::class,
         TopPicks::class,
