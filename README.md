@@ -1,7 +1,7 @@
 # Unofficial Shopee API Client in PHP
 
 [![Total Downloads](https://poser.pugx.org/ecomphp/shopee-php/downloads)](https://packagist.org/packages/ecomphp/https://github.com/EcomPHP/shopee-php) 
-[![Latest Stable Version](https://poser.pugx.org/ecomphp/https://github.com/EcomPHP/shopee-php/v/stable)](https://packagist.org/packages/ecomphp/shopee-php) 
+[![Latest Stable Version](https://poser.pugx.org/ecomphp/shopee-php/v/stable)](https://packagist.org/packages/ecomphp/shopee-php) 
 [![Latest Unstable Version](https://poser.pugx.org/ecomphp/shopee-php/v/unstable)](https://packagist.org/packages/ecomphp/shopee-php)
 [![Build Status](https://img.shields.io/github/actions/workflow/status/ecomphp/shopee-php/ci.yml?branch=master&label=ci%20build&style=flat-square)](https://github.com/ecomphp/shopee-php/actions?query=workflow%3ATest)
 [![License](https://poser.pugx.org/ecomphp/shopee-php/license)](https://packagist.org/packages/ecomphp/shopee-php)
