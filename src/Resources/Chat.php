@@ -159,28 +159,6 @@ class Chat extends Resource
     }
 
     /**
-     * API: v2.sellerchat.get_offer_toggle_status
-     * To get the toggle status to check if the shop has allowed buyer to negotiate price with seller.
-     */
-    public function getOfferToggleStatus()
-    {
-        return $this->call('GET', 'sellerchat/get_offer_toggle_status');
-    }
-
-    /**
-     * API: v2.sellerchat.set_offer_toggle_status
-     * To set the toggle status.If set as "enabled", then seller doesn't allow buyer negotiate the price.
-     */
-    public function setOfferToggleStatus($make_offer_status)
-    {
-        return $this->call('POST', 'sellerchat/set_offer_toggle_status', [
-            RequestOptions::JSON => [
-                'make_offer_status' => $make_offer_status,
-            ],
-        ]);
-    }
-
-    /**
      * API: v2.sellerchat.upload_image
      * When you need to send an image type message, please request this API first to upload the image file to get image url. Then proceed to request the send message API with the image url.
      */
@@ -227,35 +205,6 @@ class Chat extends Resource
         return $this->call('POST', 'sellerchat/mute_conversation', [
             RequestOptions::JSON => [
                 'conversation_id' => $conversation_id,
-            ],
-        ]);
-    }
-
-    /**
-     * API: v2.sellerchat.reply_offer
-     * To reply offer accept / reject offers by OpenAPI.
-     */
-    public function replyOffer($offer_id, $message_id, $operation)
-    {
-        return $this->call('POST', 'sellerchat/reply_offer', [
-            RequestOptions::JSON => [
-                'offer_id' => $offer_id,
-                'message_id' => $message_id,
-                'operation' => $operation,
-            ],
-        ]);
-    }
-
-    /**
-     * API: v2.sellerchat.get_offer_detail
-     * Get offer detail.
-     */
-    public function getOfferDetail($offer_id, $message_id)
-    {
-        return $this->call('GET', 'sellerchat/get_offer_detail', [
-            RequestOptions::QUERY => [
-                'offer_id' => $offer_id,
-                'message_id' => $message_id,
             ],
         ]);
     }
