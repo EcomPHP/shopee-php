@@ -19,7 +19,7 @@ class Order extends Resource
      * API: v2.order.get_order_list
      * Use this api to search orders.
      *
-     * @param  array  $params
+     * @param array $params
      * @return array|mixed
      */
     public function getOrderList($params = [])
@@ -40,7 +40,7 @@ class Order extends Resource
      * API: v2.order.get_shipment_list
      * Use this api to get order list which order_status is READY_TO_SHIP.
      *
-     * @param  array  $params
+     * @param array $params
      * @return array|mixed
      */
     public function getShipmentList($params = [])
@@ -56,7 +56,7 @@ class Order extends Resource
      * Use this api to get order detail.
      *
      * @param $ids
-     * @param  array  $params
+     * @param array $params
      * @return array|mixed
      */
     public function getOrderDetail($ids, $params = [])
@@ -200,6 +200,20 @@ class Order extends Resource
 
         return $this->call('POST', 'order/get_buyer_invoice_info', [
             RequestOptions::JSON => $params,
+        ]);
+    }
+
+    /**
+     * API: v2.order.handle_buyer_cancellation
+     * Use this api to handle buyer's cancellation application.
+     */
+    public function handleBuyerCancellation($order_sn, $operation)
+    {
+        return $this->call('POST', 'order/handle_buyer_cancellation', [
+            RequestOptions::JSON => [
+                'order_sn' => $order_sn,
+                'operation' => $operation,
+            ],
         ]);
     }
 }
