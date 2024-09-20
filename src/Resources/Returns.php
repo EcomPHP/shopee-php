@@ -116,10 +116,6 @@ class Returns extends Resource
         return $this->call('POST', 'returns/convert_image', [
             RequestOptions::MULTIPART => [
                 [
-                    'name' => 'return_sn',
-                    'contents' => $return_sn,
-                ],
-                [
                     'name' => 'upload_image',
                     'contents' => fopen($upload_image, 'r'),
                 ]
