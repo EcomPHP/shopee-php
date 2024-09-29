@@ -67,4 +67,16 @@ class Shop extends Resource
             RequestOptions::QUERY => $params
         ]);
     }
+
+    public function getAuthorizedResellerBrand($params = [])
+    {
+        $params = array_merge([
+            'page_no' => 1,
+            'page_size' => 10,
+        ], $params);
+
+        return $this->call('GET', 'shop/get_authorised_reseller_brand', [
+            RequestOptions::QUERY => $params
+        ]);
+    }
 }
