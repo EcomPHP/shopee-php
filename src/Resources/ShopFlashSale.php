@@ -29,7 +29,7 @@ class ShopFlashSale extends Resource
     {
         return $this->call('POST', 'shop_flash_sale/create_shop_flash_sale', [
             RequestOptions::JSON => [
-                'timeslot_id' => $timeslot_id,
+                'timeslot_id' => intval($timeslot_id),
             ]
         ]);
     }
@@ -41,9 +41,9 @@ class ShopFlashSale extends Resource
 
     public function addShopFlashSaleItems($flash_sale_id, $items)
     {
-        return $this->call('POST', 'shop_flash_sale/add_item_criteria', [
+        return $this->call('POST', 'shop_flash_sale/add_shop_flash_sale_items', [
             RequestOptions::JSON => [
-                'flash_sale_id' => $flash_sale_id,
+                'flash_sale_id' => intval($flash_sale_id),
                 'items' => $items,
             ]
         ]);
@@ -66,7 +66,7 @@ class ShopFlashSale extends Resource
     {
         return $this->call('GET', 'shop_flash_sale/get_shop_flash_sale', [
             RequestOptions::QUERY => [
-                'flash_sale_id' => $flash_sale_id,
+                'flash_sale_id' => intval($flash_sale_id),
             ]
         ]);
     }
@@ -77,7 +77,7 @@ class ShopFlashSale extends Resource
             RequestOptions::QUERY => [
                 'offset' => $offset,
                 'limit' => $limit,
-                'flash_sale_id' => $flash_sale_id,
+                'flash_sale_id' => intval($flash_sale_id),
             ]
         ]);
     }
@@ -87,7 +87,7 @@ class ShopFlashSale extends Resource
         return $this->call('POST', 'shop_flash_sale/update_shop_flash_sale', [
             RequestOptions::JSON => [
                 'status' => $status,
-                'flash_sale_id' => $flash_sale_id,
+                'flash_sale_id' => intval($flash_sale_id),
             ]
         ]);
     }
@@ -96,7 +96,7 @@ class ShopFlashSale extends Resource
     {
         return $this->call('POST', 'shop_flash_sale/update_shop_flash_sale_items', [
             RequestOptions::JSON => [
-                'flash_sale_id' => $flash_sale_id,
+                'flash_sale_id' => intval($flash_sale_id),
                 'items' => $items,
             ]
         ]);
@@ -106,7 +106,7 @@ class ShopFlashSale extends Resource
     {
         return $this->call('POST', 'shop_flash_sale/delete_shop_flash_sale', [
             RequestOptions::JSON => [
-                'flash_sale_id' => $flash_sale_id,
+                'flash_sale_id' => intval($flash_sale_id),
             ]
         ]);
     }
@@ -115,7 +115,7 @@ class ShopFlashSale extends Resource
     {
         return $this->call('POST', 'shop_flash_sale/delete_shop_flash_sale_items', [
             RequestOptions::JSON => [
-                'flash_sale_id' => $flash_sale_id,
+                'flash_sale_id' => intval($flash_sale_id),
                 'item_ids' => $item_ids,
             ]
         ]);
