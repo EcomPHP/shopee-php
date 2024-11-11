@@ -230,7 +230,7 @@ class Client
         $json = json_decode($body, true);
         if (is_array($json)) {
             if (isset($json['error']) && $json['error']) {
-                $this->handleErrorResponse($json['error'], $json['message'], $json);
+                $this->handleErrorResponse($json['error'], $json['message'] ?? null, $json);
             }
 
             return $json['response'] ?? $json;
