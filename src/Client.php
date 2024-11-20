@@ -143,6 +143,7 @@ class Client
     {
         return new Auth($this);
     }
+
     /**
      * Magic call resource
      *
@@ -201,6 +202,7 @@ class Client
             if ($this->shop_id) {
                 $query['shop_id'] = $this->shop_id;
             }
+
             $this->prepareSignature($uri->getPath(), $query);
 
             $uri = $uri->withQuery(http_build_query($query));
