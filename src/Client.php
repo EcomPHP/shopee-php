@@ -96,7 +96,6 @@ class Client
     protected $debug_mode = false;
     protected $shop_id;
     protected $access_token;
-    protected $return_sn;
 
     protected $china_region = false;
     protected $brazil_region = false;
@@ -144,12 +143,6 @@ class Client
     {
         return new Auth($this);
     }
-
-    public function setReturnSn($return_sn)
-    {
-        $this->return_sn = $return_sn;
-    }
-
     /**
      * Magic call resource
      *
@@ -208,11 +201,6 @@ class Client
             if ($this->shop_id) {
                 $query['shop_id'] = $this->shop_id;
             }
-
-            if ($this->return_sn) {
-                $query['return_sn'] = $this->return_sn;
-            }
-
             $this->prepareSignature($uri->getPath(), $query);
 
             $uri = $uri->withQuery(http_build_query($query));
