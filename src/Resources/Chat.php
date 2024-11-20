@@ -208,4 +208,14 @@ class Chat extends Resource
             ],
         ]);
     }
+
+    public function deleteMessage($message_id, $message_type)
+    {
+        return $this->call('POST', 'sellerchat/delete_message', [
+            RequestOptions::JSON => [
+                'message_id' => $message_id,
+                'message_type' => $message_type
+            ],
+        ]);
+    }
 }
