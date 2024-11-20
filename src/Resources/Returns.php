@@ -114,6 +114,9 @@ class Returns extends Resource
     public function convertImage($return_sn, $upload_image)
     {
         return $this->call('POST', 'returns/convert_image', [
+            RequestOptions::QUERY => [
+                'return_sn' => $return_sn,
+            ],
             RequestOptions::MULTIPART => [
                 [
                     'name' => 'upload_image',

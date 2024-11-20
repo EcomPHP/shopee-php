@@ -24,6 +24,7 @@ use EcomPHP\Shopee\Resources\Merchant;
 use EcomPHP\Shopee\Resources\Push;
 use EcomPHP\Shopee\Resources\Returns;
 use EcomPHP\Shopee\Resources\ShopCategory;
+use EcomPHP\Shopee\Resources\ShopFlashSale;
 use EcomPHP\Shopee\Resources\TopPicks;
 use EcomPHP\Shopee\Resources\Voucher;
 use GuzzleHttp\Client as GuzzleHttpClient;
@@ -61,6 +62,7 @@ use Psr\Http\Message\RequestInterface;
  * @property-read MediaSpace $MediaSpace
  * @property-read Merchant $Merchant
  * @property-read Push $Push
+ * @property-read ShopFlashSale $ShopFlashSale
  */
 class Client
 {
@@ -86,6 +88,7 @@ class Client
         MediaSpace::class,
         Merchant::class,
         Push::class,
+        ShopFlashSale::class,
     ];
 
     protected $partner_id;
@@ -237,7 +240,7 @@ class Client
         $json = json_decode($body, true);
         if (is_array($json)) {
             if (isset($json['error']) && $json['error']) {
-                $this->handleErrorResponse($json['error'], $json['message'], $json);
+                $this->handleErrorResponse($json['error'], $json['message'] ?? null, $json);
             }
 
             return $json['response'] ?? $json;
