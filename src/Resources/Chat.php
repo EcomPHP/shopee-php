@@ -71,11 +71,15 @@ class Chat extends Resource
     /**
      * API: v2.sellerchat.get_one_conversation
      * To get a specific conversation's basic information.
+     *
+     * business_type: If this parameter is not passed, the default value is 0, 11 is for seller affiliate chat
+     *
      */
-    public function getOneConversation($conversation_id)
+    public function getOneConversation($conversation_id, $business_type = 0)
     {
         $params = [
             'conversation_id' => $conversation_id,
+            'business_type' => $business_type,
         ];
 
         return $this->call('GET', 'sellerchat/get_one_conversation', [
