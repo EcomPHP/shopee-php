@@ -31,9 +31,10 @@ class Chat extends Resource
     /**
      * API: v2.sellerchat.send_message
      * 1. To send a message and select the correct message type (Do not use this API to send batch messages)
-     * 2.Currently TW region is not supported to send messages.
+     * 2. Currently TW region is not supported to send messages.
+     * 3. If this parameter is not passed, the default value is 0, 0 is for seller buyer chat, 11 is for seller affiliate chat
      */
-    public function sendMessage($to_id, $message_type, $content)
+    public function sendMessage($to_id, $message_type, $content, $business_type = 0)
     {
         if (is_string($content)) {
             $content = [
@@ -45,6 +46,7 @@ class Chat extends Resource
             'to_id' => $to_id,
             'message_type' => $message_type,
             'content' => $content,
+            'business_type' => $business_type,
         ];
 
         return $this->call('POST','sellerchat/send_message', [
