@@ -34,7 +34,7 @@ class Chat extends Resource
      * 2. Currently TW region is not supported to send messages.
      * 3. If this parameter is not passed, the default value is 0, 0 is for seller buyer chat, 11 is for seller affiliate chat
      */
-    public function sendMessage($to_id, $message_type, $content, $business_type = 0)
+    public function sendMessage($to_id, $message_type, $content, $business_type = 0, $conversation_id = 0)
     {
         if (is_string($content)) {
             $content = [
@@ -46,8 +46,12 @@ class Chat extends Resource
             'to_id' => $to_id,
             'message_type' => $message_type,
             'content' => $content,
-            'business_type' => $business_type,
         ];
+
+        if ($business_type > 0) {
+            $params['business_type'] = $business_type;
+            $params['conversation_id'] = $conversation_id;
+        }
 
         return $this->call('POST','sellerchat/send_message', [
             RequestOptions::JSON => $params,
