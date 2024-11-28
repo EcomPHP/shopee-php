@@ -8,9 +8,9 @@
  * file that was distributed with this source code.
  */
 
-namespace EcomPHP\Shopee\Resources;
+namespace Jekka\Shopee\Resources;
 
-use EcomPHP\Shopee\Resource;
+use Jekka\Shopee\Resource;
 use GuzzleHttp\RequestOptions;
 
 class Chat extends Resource

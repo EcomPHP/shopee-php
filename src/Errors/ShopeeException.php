@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace EcomPHP\Shopee\Errors;
+namespace Jekka\Shopee\Errors;
 
 use Exception;
 

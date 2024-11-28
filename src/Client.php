@@ -8,36 +8,36 @@
  * file that was distributed with this source code.
  */
 
-namespace EcomPHP\Shopee;
+namespace Jekka\Shopee;
 
-use EcomPHP\Shopee\Errors\AuthorizationException;
-use EcomPHP\Shopee\Resources\AccountHealth;
-use EcomPHP\Shopee\Resources\AddOnDeal;
-use EcomPHP\Shopee\Resources\Ads;
-use EcomPHP\Shopee\Resources\BundleDeal;
-use EcomPHP\Shopee\Resources\Chat;
-use EcomPHP\Shopee\Resources\Discount;
-use EcomPHP\Shopee\Resources\FirstMile;
-use EcomPHP\Shopee\Resources\FollowPrize;
-use EcomPHP\Shopee\Resources\MediaSpace;
-use EcomPHP\Shopee\Resources\Merchant;
-use EcomPHP\Shopee\Resources\Push;
-use EcomPHP\Shopee\Resources\Returns;
-use EcomPHP\Shopee\Resources\ShopCategory;
-use EcomPHP\Shopee\Resources\ShopFlashSale;
-use EcomPHP\Shopee\Resources\TopPicks;
-use EcomPHP\Shopee\Resources\Voucher;
+use Jekka\Shopee\Errors\AuthorizationException;
+use Jekka\Shopee\Resources\AccountHealth;
+use Jekka\Shopee\Resources\AddOnDeal;
+use Jekka\Shopee\Resources\Ads;
+use Jekka\Shopee\Resources\BundleDeal;
+use Jekka\Shopee\Resources\Chat;
+use Jekka\Shopee\Resources\Discount;
+use Jekka\Shopee\Resources\FirstMile;
+use Jekka\Shopee\Resources\FollowPrize;
+use Jekka\Shopee\Resources\MediaSpace;
+use Jekka\Shopee\Resources\Merchant;
+use Jekka\Shopee\Resources\Push;
+use Jekka\Shopee\Resources\Returns;
+use Jekka\Shopee\Resources\ShopCategory;
+use Jekka\Shopee\Resources\ShopFlashSale;
+use Jekka\Shopee\Resources\TopPicks;
+use Jekka\Shopee\Resources\Voucher;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Middleware;
 use GuzzleHttp\RequestOptions;
-use EcomPHP\Shopee\Errors\ShopeeException;
-use EcomPHP\Shopee\Resources\Authorization;
-use EcomPHP\Shopee\Resources\Logistic;
-use EcomPHP\Shopee\Resources\Order;
-use EcomPHP\Shopee\Resources\Payment;
-use EcomPHP\Shopee\Resources\Product;
-use EcomPHP\Shopee\Resources\Shop;
+use Jekka\Shopee\Errors\ShopeeException;
+use Jekka\Shopee\Resources\Authorization;
+use Jekka\Shopee\Resources\Logistic;
+use Jekka\Shopee\Resources\Order;
+use Jekka\Shopee\Resources\Payment;
+use Jekka\Shopee\Resources\Product;
+use Jekka\Shopee\Resources\Shop;
 use Psr\Http\Message\RequestInterface;
 
 /**
@@ -176,7 +176,7 @@ class Client
         }
 
         //Initiate the resource object
-        /** @var \EcomPHP\Shopee\Resource $resource */
+        /** @var \Jekka\Shopee\Resource $resource */
         $resource = new $resourceClassName();
         if (!$resource instanceof Resource) {
             throw new ShopeeException("Invalid resource object ".$resourceName);

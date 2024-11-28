@@ -8,7 +8,7 @@
  * file that was distributed with this source code.
  */
 
-namespace EcomPHP\Shopee;
+namespace Jekka\Shopee;
 
 abstract class Resource
 {

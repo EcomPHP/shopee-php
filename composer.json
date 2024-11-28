@@ -1,12 +1,12 @@
 {
-  "name": "ecomphp/shopee-php",
+  "name": "jekka/shopee-php",
   "description": "Unofficial Shopee API Client in PHP",
   "type": "library",
   "license": "Apache-2.0",
   "authors": [
     {
-      "name": "J",
-      "email": "j@sax.vn"
+      "name": "jekka",
+      "email": "hellojekka@hellojekka.ai"
     }
   ],
   "require": {
@@ -19,12 +19,12 @@
   },
   "autoload": {
     "psr-4": {
-      "EcomPHP\\Shopee\\": "src"
+      "Jekka\\Shopee\\": "src"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "EcomPHP\\Shopee\\Tests\\": "tests"
+      "Jekka\\Shopee\\Tests\\": "tests"
     }
   },
   "scripts": {

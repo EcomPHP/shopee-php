@@ -8,10 +8,10 @@
  * file that was distributed with this source code.
  */
 
-namespace EcomPHP\Shopee\Resources;
+namespace Jekka\Shopee\Resources;
 
 use GuzzleHttp\RequestOptions;
-use EcomPHP\Shopee\Resource;
+use Jekka\Shopee\Resource;
 
 class Product extends Resource
 {
