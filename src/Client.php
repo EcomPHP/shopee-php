@@ -99,6 +99,8 @@ class Client
 
     protected $china_region = false;
     protected $brazil_region = false;
+    protected $time_out = 10;
+    protected $verify = false;
 
     public function __construct($partner_id, $partner_key)
     {
@@ -129,6 +131,16 @@ class Client
         $this->access_token = $access_token;
     }
 
+    public function setTimeOut($time_out)
+    {
+        $this->time_out = $time_out;
+    }
+
+    public function setVerify($verify)
+    {
+        $this->verify = $verify;
+    }
+
     public function partnerId()
     {
         return $this->partner_id;
@@ -148,23 +160,23 @@ class Client
      * Magic call resource
      *
      * @param $resourceName
-     * @throws \Exception
      * @return mixed
+     * @throws \Exception
      */
     public function __get($resourceName)
     {
-        $resourceClassName = __NAMESPACE__."\\Resources\\".$resourceName;
+        $resourceClassName = __NAMESPACE__ . "\\Resources\\" . $resourceName;
         if (!in_array($resourceClassName, $this->resources)) {
             $resourceClassName = null;
             foreach ($this->resources as $resource) {
                 // skip class in resources folder
-                if (strpos($resource, __NAMESPACE__."\\Resources\\") === 0) {
+                if (strpos($resource, __NAMESPACE__ . "\\Resources\\") === 0) {
                     continue;
                 }
 
                 // find external resource
-                $lookup = "\\".$resourceName;
-                if (0 === substr_compare($resource, $lookup, - strlen($lookup))) {
+                $lookup = "\\" . $resourceName;
+                if (0 === substr_compare($resource, $lookup, -strlen($lookup))) {
                     $resourceClassName = $resource;
                     break;
                 }
@@ -172,14 +184,14 @@ class Client
         }
 
         if ($resourceClassName === null) {
-            throw new ShopeeException("Invalid resource ".$resourceName);
+            throw new ShopeeException("Invalid resource " . $resourceName);
         }
 
         //Initiate the resource object
         /** @var \Jekka\Shopee\Resource $resource */
         $resource = new $resourceClassName();
         if (!$resource instanceof Resource) {
-            throw new ShopeeException("Invalid resource object ".$resourceName);
+            throw new ShopeeException("Invalid resource object " . $resourceName);
         }
 
         $resource->useApiClient($this);
@@ -224,6 +236,12 @@ class Client
             $api = substr($api, 7);
         }
 
+        if (!isset($options['timeout'])) {
+            $options['timeout'] = $this->time_out;
+        }
+        if (!isset($options['verify'])) {
+            $options['verify'] = $this->verify;
+        }
         $response = $this->httpClient()->request($method, $api, $options);
         $body = $response->getBody()->getContents();
 
@@ -278,7 +296,7 @@ class Client
             'shop_id' => '',
         ], $query);
 
-        $stringToBeSigned = $this->partnerId().  $path . $query['timestamp'] . $query['access_token'] . $query['shop_id'];
+        $stringToBeSigned = $this->partnerId() . $path . $query['timestamp'] . $query['access_token'] . $query['shop_id'];
         $query['sign'] = hash_hmac('sha256', $stringToBeSigned, $this->partnerKey());
     }
 
