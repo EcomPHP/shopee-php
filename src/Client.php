@@ -241,7 +241,11 @@ class Client
 
     protected function handleErrorResponse($error_code, $error_message, $response)
     {
-        if ($error_code == 'error_auth') {
+        $authorizationCode = [
+            'invalid_code', 'invalid_acceess_token', 'refresh_token_expired'
+        ];
+
+        if (in_array($error_code, $authorizationCode)) {
             throw new AuthorizationException($error_message, $error_code);
         }
 
