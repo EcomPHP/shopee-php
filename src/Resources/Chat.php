@@ -54,7 +54,7 @@ class Chat extends Resource
             $params['conversation_id'] = $conversation_id;
         }
 
-        return $this->call('POST','sellerchat/send_message', [
+        return $this->call('POST', 'sellerchat/send_message', [
             RequestOptions::JSON => $params,
         ]);
     }
@@ -220,6 +220,10 @@ class Chat extends Resource
         ]);
     }
 
+    /**
+     * API: v2.sellerchat.delete_message
+     * to delete a message
+     */
     public function deleteMessage($message_id, $message_type)
     {
         return $this->call('POST', 'sellerchat/delete_message', [
@@ -227,6 +231,44 @@ class Chat extends Resource
                 'message_id' => $message_id,
                 'message_type' => $message_type
             ],
+        ]);
+    }
+
+    /**
+     * API: v2.sellerchat.upload_video
+     * upload video file
+     */
+    public function uploadVideo($video)
+    {
+        $filename = 'video.mp4';
+        if ($video instanceof \SplFileInfo) {
+            $filename = $video->getFilename();
+            $video = file_get_contents($video->getPathname());
+        }
+
+        return $this->call('POST', 'sellerchat/upload_video', [
+            RequestOptions::MULTIPART => [
+                [
+                    'name' => 'file',
+                    'contents' => $video,
+                    'filename' => $filename,
+                ]
+            ],
+        ]);
+    }
+
+    /**
+     * API: v2.sellerchat.get_video_upload_result
+     * video file upload status
+     */
+    public function getVideoUploadResult($vid)
+    {
+        $params = [
+            'vid' => $vid,
+        ];
+
+        return $this->call('GET', 'sellerchat/get_video_upload_result', [
+            RequestOptions::QUERY => $params,
         ]);
     }
 }
