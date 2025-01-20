@@ -136,9 +136,11 @@ class Payment extends Resource
      * @param int $create_time_to
      * @param string $wallet_type
      * @param string $transaction_type
+     * @param string $money_flow
+     * @param string $transaction_tab_type
      * @return array|mixed
      */
-    public function getWalletTransactionList($page_size, $page_no, $create_time_from, $create_time_to, $wallet_type = null, $transaction_type = null)
+    public function getWalletTransactionList($page_size, $page_no, $create_time_from, $create_time_to, $wallet_type = null, $transaction_type = null, $money_flow = null, $transaction_tab_type = null) 
     {
         $params = [
             'page_size' => $page_size,
@@ -153,6 +155,14 @@ class Payment extends Resource
 
         if ($transaction_type) {
             $params['transaction_type'] = $transaction_type;
+        }
+
+        if ($money_flow) {
+            $params['money_flow'] = $money_flow;
+        }
+
+        if ($transaction_tab_type) {
+            $params['transaction_tab_type'] = $transaction_tab_type;
         }
 
         return $this->call('GET', 'payment/get_wallet_transaction_list', [
