@@ -18,13 +18,15 @@ class AccountHealth extends Resource
     /**
      * API: v2.account_health.shop_performance
      */
-    public function shopPerformance()
+    public function getShopPerformance()
     {
-        return $this->call('GET', 'account_health/shop_performance');
+        return $this->call('GET', 'account_health/get_shop_performance');
     }
 
     /**
      * API: v2.account_health.shop_penalty
+     *
+     * @deprecated
      */
     public function shopPenalty()
     {
