@@ -100,10 +100,17 @@ class Client
     protected $china_region = false;
     protected $brazil_region = false;
 
+    protected $custom_hostname = null;
+
     public function __construct($partner_id, $partner_key)
     {
         $this->partner_id = intval($partner_id);
         $this->partner_key = $partner_key;
+    }
+
+    public function setCustomHostname($hostname)
+    {
+        $this->custom_hostname = $hostname;
     }
 
     public function useDebugMode()
@@ -288,6 +295,10 @@ class Client
 
     public function baseUrl()
     {
+        if ($this->custom_hostname) {
+            return 'https://'.$this->custom_hostname.'/api/v2/';
+        }
+
         switch (($this->brazil_region << 2) + ($this->china_region << 1) + $this->debug_mode) {
             case 1:
                 return 'https://partner.test-stable.shopeemobile.com/api/v2/';

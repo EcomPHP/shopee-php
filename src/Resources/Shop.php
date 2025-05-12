@@ -61,7 +61,7 @@ class Shop extends Resource
      * API: v2.shop.get_shop_notification
      * get Seller Center notification, the permission is controlled by App type
      */
-    public function getShopNotification($params)
+    public function getShopNotification($params = [])
     {
         return $this->call('GET', 'shop/get_shop_notification', [
             RequestOptions::QUERY => $params
