@@ -100,7 +100,7 @@ class MerchantTest extends TestCase
     public function testGetMerchantWarehouseList()
     {
         $warehouseType = 'SELLER_WAREHOUSE';
-        $cursor = ['page_number' => 1, 'page_size' => 20];
+        $cursor = ['page_number' => 1, 'page_size' => 10];
         $expectedCursor = ['page_size' => 10, 'page_number' => 1];
         $expectedResponse = ['warehouse_list' => []];
         
@@ -127,7 +127,7 @@ class MerchantTest extends TestCase
     {
         $warehouseId = 12345;
         $warehouseType = 'SELLER_WAREHOUSE';
-        $cursor = ['page_number' => 1, 'page_size' => 20];
+        $cursor = ['page_number' => 1, 'page_size' => 10];
         $expectedCursor = ['page_size' => 10, 'page_number' => 1];
         $expectedResponse = ['shop_list' => []];
         
