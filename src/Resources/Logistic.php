@@ -151,22 +151,28 @@ class Logistic extends Resource
 
     /**
      * API: v2.logistics.download_shipping_document
-     * Use this api to download shipping_document.
-     * You have to call v2.logistics.create_shipping_document to create a new shipping document task first and call v2.logistics.get_shipping_document_result to get the task status second.
-     * If the task is READY, you can download this shipping document.
+     * Use this API to download the shipping document for provided orders. This API allows specifying the type of shipping document
+     * and optionally saving it to a specified file path locally.
      *
-     * @param  array{order_sn: string, package_number: string}  $order_list
-     * @param  string $shipping_document_type
-     * @return array|mixed
+     * @param  array{order_sn: string, package_number: string, tracking_number: string}  $order_list  List of orders or packages for which the shipping document is requested.
+     * @param  string  $shipping_document_type  Type of the shipping document to be downloaded (e.g., invoice, label).
+     * @param  string  $save_path  Optional file path to save the downloaded shipping document.
+     * @return array|mixed|string
      */
-    public function downloadShippingDocument($order_list = [], $shipping_document_type = '')
+    public function downloadShippingDocument($order_list = [], $shipping_document_type = '', $save_path = '')
     {
-        return $this->call('POST', 'logistics/download_shipping_document', [
+        $options = [
             RequestOptions::JSON => [
                 'order_list' => $order_list,
                 'shipping_document_type' => $shipping_document_type,
             ],
-        ]);
+        ];
+
+        if ($save_path) {
+            $options[RequestOptions::SINK] = $save_path;
+        }
+
+        return $this->call('POST', 'logistics/download_shipping_document', $options);
     }
 
     /**
