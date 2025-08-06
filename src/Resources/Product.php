@@ -181,7 +181,7 @@ class Product extends Resource
             'model' => $model,
         ];
 
-        return $this->call('POST', 'product/init_tier_variations', [
+        return $this->call('POST', 'product/init_tier_variation', [
             RequestOptions::JSON => $params,
         ]);
     }
@@ -194,7 +194,7 @@ class Product extends Resource
             'model_list' => $model_list,
         ];
 
-        return $this->call('POST', 'product/update_tier_variations', [
+        return $this->call('POST', 'product/update_tier_variation', [
             RequestOptions::JSON => $params,
         ]);
     }
