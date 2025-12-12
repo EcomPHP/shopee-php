@@ -100,7 +100,7 @@ class MediaSpace extends Resource
         return $this->call('POST', 'media_space/upload_image', [
             RequestOptions::MULTIPART => [
                 [
-                    'name' => 'file',
+                    'name' => 'image',
                     'contents' => $image,
                     'filename' => $filename,
                 ],
