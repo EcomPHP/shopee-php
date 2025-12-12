@@ -454,7 +454,7 @@ class ProductTest extends TestCase
             ->method('call')
             ->with(
                 'POST', 
-                'product/init_tier_variations', 
+                'product/init_tier_variation',
                 [
                     RequestOptions::JSON => [
                         'item_id' => $itemId,
@@ -487,7 +487,7 @@ class ProductTest extends TestCase
             ->method('call')
             ->with(
                 'POST', 
-                'product/update_tier_variations', 
+                'product/update_tier_variation',
                 [
                     RequestOptions::JSON => [
                         'item_id' => $itemId,
