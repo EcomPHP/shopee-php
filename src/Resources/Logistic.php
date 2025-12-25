@@ -36,6 +36,22 @@ class Logistic extends Resource
     }
 
     /**
+     * API: v2.logistics.get_booking_shipping_parameter
+     * Use this api to get the parameter "info_needed" from the response to check if the booking has pickup or dropoff or no integrate options.
+     *
+     * @param  string  $booking_sn
+     * @return array|mixed
+     */
+    public function getBookingShippingParameter($booking_sn)
+    {
+        return $this->call('GET', 'logistics/get_booking_shipping_parameter', [
+            RequestOptions::QUERY => [
+                'booking_sn' => $booking_sn,
+            ],
+        ]);
+    }
+
+    /**
      * API: v2.logistics.get_tracking_number
      * Use this api to get tracking_number when you have shipped order.
      *
@@ -47,6 +63,22 @@ class Logistic extends Resource
     {
         $params['order_sn'] = $order_id;
         return $this->call('GET', 'logistics/get_tracking_number', [
+            RequestOptions::QUERY => $params,
+        ]);
+    }
+
+    /**
+     * API: v2.logistics.get_booking_tracking_number
+     * Use this api to get tracking_number when you have shipped booking.
+     *
+     * @param $booking_sn
+     * @param  array  $params
+     * @return array|mixed
+     */
+    public function getBookingTrackingNumber($booking_sn, $params = [])
+    {
+        $params['booking_sn'] = $booking_sn;
+        return $this->call('GET', 'logistics/get_booking_tracking_number', [
             RequestOptions::QUERY => $params,
         ]);
     }
@@ -75,6 +107,30 @@ class Logistic extends Resource
         ];
 
         return $this->call('POST', 'logistics/ship_order', [
+            RequestOptions::JSON => $params,
+        ]);
+    }
+
+    /**
+     * API: v2.logistics.ship_booking
+     * Use this api to initiate logistics for booking including arrange pickup, dropoff or shipment for non-integrated logistic channels.
+     *
+     * @param  string $booking_sn
+     * @param  array $pickup
+     * @param  array $dropoff
+     * @param  array $non_integrated
+     * @return array|mixed
+     */
+    public function shipBooking($booking_sn, $pickup = [], $dropoff = [], $non_integrated = [])
+    {
+        $params = [
+            'booking_sn' => $booking_sn,
+            'pickup' => $pickup,
+            'dropoff' => $dropoff,
+            'non_integrated' => $non_integrated,
+        ];
+
+        return $this->call('POST', 'logistics/ship_booking', [
             RequestOptions::JSON => $params,
         ]);
     }
@@ -118,6 +174,22 @@ class Logistic extends Resource
     }
 
     /**
+     * API: v2.logistics.get_booking_shipping_document_parameter
+     * Use this api to get the selectable shipping_document_type and suggested shipping_document_type for booking.
+     *
+     * @param  array{booking_sn: string}  $booking_list
+     * @return array|mixed
+     */
+    public function getBookingShippingDocumentParameter($booking_list)
+    {
+        return $this->call('POST', 'logistics/get_booking_shipping_document_parameter', [
+            RequestOptions::JSON => [
+                'booking_list' => $booking_list,
+            ],
+        ]);
+    }
+
+    /**
      * API: v2.logistics.create_shipping_document
      * Use this api to create shipping document task for each order or package and this API is only available after retrieving the tracking number.
      *
@@ -134,6 +206,22 @@ class Logistic extends Resource
     }
 
     /**
+     * API: v2.logistics.create_booking_shipping_document
+     * Use this api to create shipping document task for each booking or package.
+     *
+     * @param array{booking_sn: string, tracking_number: string, shipping_document_type: string} $booking_list
+     * @return array|mixed|string
+     */
+    public function createBookingShippingDocument($booking_list = [])
+    {
+        return $this->call('POST', 'logistics/create_booking_shipping_document', [
+            RequestOptions::JSON => [
+                'booking_list' => $booking_list,
+            ],
+        ]);
+    }
+
+    /**
      * API: v2.logistics.get_shipping_document_result
      * Use this api to retrieve the status of the shipping document task. Document will be available for download only after the status change to 'READY'.
      *
@@ -145,6 +233,22 @@ class Logistic extends Resource
         return $this->call('POST', 'logistics/get_shipping_document_result', [
             RequestOptions::JSON => [
                 'order_list' => $order_list,
+            ],
+        ]);
+    }
+
+    /**
+     * API: v2.logistics.get_booking_shipping_document_result
+     * Use this api to retrieve the status of the booking shipping document task.
+     *
+     * @param  array{booking_sn: string, shipping_document_type: string} $booking_list
+     * @return array|mixed
+     */
+    public function getBookingShippingDocumentResult($booking_list = [])
+    {
+        return $this->call('POST', 'logistics/get_booking_shipping_document_result', [
+            RequestOptions::JSON => [
+                'booking_list' => $booking_list,
             ],
         ]);
     }
@@ -176,6 +280,31 @@ class Logistic extends Resource
     }
 
     /**
+     * API: v2.logistics.download_booking_shipping_document
+     * Use this API to download the shipping document for provided bookings.
+     *
+     * @param  array{booking_sn: string}  $booking_list
+     * @param  string  $shipping_document_type
+     * @param  string  $save_path
+     * @return array|mixed|string
+     */
+    public function downloadBookingShippingDocument($booking_list = [], $shipping_document_type = '', $save_path = '')
+    {
+        $options = [
+            RequestOptions::JSON => [
+                'booking_list' => $booking_list,
+                'shipping_document_type' => $shipping_document_type,
+            ],
+        ];
+
+        if ($save_path) {
+            $options[RequestOptions::SINK] = $save_path;
+        }
+
+        return $this->call('POST', 'logistics/download_booking_shipping_document', $options);
+    }
+
+    /**
      * API: v2.logistics.get_tracking_info
      * Use this api to get the logistics tracking information of an order.
      *
@@ -189,6 +318,22 @@ class Logistic extends Resource
             RequestOptions::QUERY => [
                 'order_sn' => $order_sn,
                 'package_number' => $package_number,
+            ],
+        ]);
+    }
+
+    /**
+     * API: v2.logistics.get_booking_tracking_info
+     * Use this api to get the logistics tracking information of a booking.
+     *
+     * @param  string  $booking_sn
+     * @return array|mixed
+     */
+    public function getBookingTrackingInfo($booking_sn)
+    {
+        return $this->call('GET', 'logistics/get_booking_tracking_info', [
+            RequestOptions::QUERY => [
+                'booking_sn' => $booking_sn,
             ],
         ]);
     }
@@ -311,6 +456,24 @@ class Logistic extends Resource
             RequestOptions::JSON => [
                 'order_sn' => $order_sn,
                 'package_number' => $package_number,
+                'recipient_address_info' => $recipient_address_info,
+            ],
+        ]);
+    }
+
+    /**
+     * API: v2.logistics.get_booking_shipping_document_data_info
+     * Use this api to fetch the logistics information of a booking.
+     *
+     * @param  string $booking_sn
+     * @param  array $recipient_address_info
+     * @return array|mixed
+     */
+    public function getBookingShippingDocumentDataInfo($booking_sn, $recipient_address_info = [])
+    {
+        return $this->call('POST', 'logistics/get_booking_shipping_document_data_info', [
+            RequestOptions::JSON => [
+                'booking_sn' => $booking_sn,
                 'recipient_address_info' => $recipient_address_info,
             ],
         ]);

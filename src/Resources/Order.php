@@ -73,6 +73,48 @@ class Order extends Resource
     }
 
     /**
+     * API: v2.order.get_booking_list
+     * Use this api to search bookings.
+     *
+     * @param array $params
+     * @return array|mixed
+     */
+    public function getBookingList($params = [])
+    {
+        $params = array_merge([
+            'time_range_field' => 'create_time',
+            'time_from' => strtotime('-7 days'),
+            'time_to' => time(),
+            'page_size' => 20,
+        ], $params);
+
+        return $this->call('GET', 'order/get_booking_list', [
+            RequestOptions::QUERY => $params,
+        ]);
+    }
+
+    /**
+     * API: v2.order.get_booking_detail
+     * Use this api to get booking detail.
+     *
+     * @param $ids
+     * @param array $params
+     * @return array|mixed
+     */
+    public function getBookingDetail($ids, $params = [])
+    {
+        if (is_array($ids)) {
+            $ids = implode(',', $ids);
+        }
+
+        $params['booking_sn_list'] = $ids;
+
+        return $this->call('GET', 'order/get_booking_detail', [
+            RequestOptions::QUERY => $params,
+        ]);
+    }
+
+    /**
      * API: v2.order.split_order
      * Use this api to split an order into multiple packages.
      */

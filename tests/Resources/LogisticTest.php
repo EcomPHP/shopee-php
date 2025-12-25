@@ -461,4 +461,215 @@ class LogisticTest extends TestCase
 
         $this->assertEquals($expectedResponse, $result);
     }
+
+    public function testGetBookingShippingParameter()
+    {
+        $orderSn = '123456789';
+        $expectedResponse = ['info_needed' => []];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'GET', 
+                'logistics/get_booking_shipping_parameter', 
+                [
+                    RequestOptions::QUERY => [
+                        'booking_sn' => $orderSn,
+                    ]
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->logistic->getBookingShippingParameter($orderSn);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testShipBooking()
+    {
+        $orderSn = '123456789';
+        $pickup = ['address_id' => 123];
+        $expectedResponse = ['success' => true];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'POST', 
+                'logistics/ship_booking', 
+                [
+                    RequestOptions::JSON => [
+                        'booking_sn' => $orderSn,
+                        'pickup' => $pickup,
+                        'dropoff' => [],
+                        'non_integrated' => [],
+                    ]
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->logistic->shipBooking($orderSn, $pickup);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testGetBookingTrackingNumber()
+    {
+        $orderSn = '123456789';
+        $expectedResponse = ['tracking_number' => 'TN123'];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'GET', 
+                'logistics/get_booking_tracking_number', 
+                [
+                    RequestOptions::QUERY => ['booking_sn' => $orderSn]
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->logistic->getBookingTrackingNumber($orderSn);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testGetBookingShippingDocumentParameter()
+    {
+        $orderList = [['booking_sn' => '123456789']];
+        $expectedResponse = ['shipping_document_type_list' => []];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'POST', 
+                'logistics/get_booking_shipping_document_parameter', 
+                [
+                    RequestOptions::JSON => ['booking_list' => $orderList]
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->logistic->getBookingShippingDocumentParameter($orderList);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testCreateBookingShippingDocument()
+    {
+        $orderList = [['booking_sn' => '123456789']];
+        $expectedResponse = ['result_list' => []];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'POST', 
+                'logistics/create_booking_shipping_document', 
+                [
+                    RequestOptions::JSON => ['booking_list' => $orderList]
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->logistic->createBookingShippingDocument($orderList);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testGetBookingShippingDocumentResult()
+    {
+        $orderList = [['booking_sn' => '123456789']];
+        $expectedResponse = ['result_list' => []];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'POST', 
+                'logistics/get_booking_shipping_document_result', 
+                [
+                    RequestOptions::JSON => ['booking_list' => $orderList]
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->logistic->getBookingShippingDocumentResult($orderList);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testDownloadBookingShippingDocument()
+    {
+        $orderList = [['booking_sn' => '123456789']];
+        $shippingDocumentType = 'NORMAL_AIRWAY_BILL';
+        $expectedResponse = 'binary_data';
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'POST', 
+                'logistics/download_booking_shipping_document', 
+                [
+                    RequestOptions::JSON => [
+                        'booking_list' => $orderList,
+                        'shipping_document_type' => $shippingDocumentType,
+                    ]
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->logistic->downloadBookingShippingDocument($orderList, $shippingDocumentType);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testGetBookingShippingDocumentDataInfo()
+    {
+        $orderSn = '123456789';
+        $recipientAddressInfo = [
+            'name' => 'John Doe',
+            'phone' => '1234567890',
+            'address' => '123 Main St'
+        ];
+        $expectedResponse = ['data_info' => []];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'POST', 
+                'logistics/get_booking_shipping_document_data_info', 
+                [
+                    RequestOptions::JSON => [
+                        'booking_sn' => $orderSn,
+                        'recipient_address_info' => $recipientAddressInfo
+                    ]
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->logistic->getBookingShippingDocumentDataInfo($orderSn, $recipientAddressInfo);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testGetBookingTrackingInfo()
+    {
+        $orderSn = '123456789';
+        $expectedResponse = ['tracking_info' => []];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'GET', 
+                'logistics/get_booking_tracking_info', 
+                [
+                    RequestOptions::QUERY => [
+                        'booking_sn' => $orderSn,
+                    ]
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->logistic->getBookingTrackingInfo($orderSn);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
 }

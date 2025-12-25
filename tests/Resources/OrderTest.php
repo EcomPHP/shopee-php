@@ -146,6 +146,58 @@ class OrderTest extends TestCase
         $this->assertEquals($expectedResponse, $result);
     }
 
+    public function testGetBookingList()
+    {
+        $params = [
+            'time_range_field' => 'update_time',
+            'time_from' => 1609459200,
+            'time_to' => 1612137600,
+            'page_size' => 50
+        ];
+        $expectedResponse = ['order_list' => []];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'GET', 
+                'order/get_booking_list', 
+                [
+                    RequestOptions::QUERY => $params
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->order->getBookingList($params);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testGetBookingDetail()
+    {
+        $orderIds = ['123456789', '987654321'];
+        $params = ['response_optional_fields' => 'buyer_user_id,buyer_username'];
+        $expectedParams = [
+            'booking_sn_list' => '123456789,987654321',
+            'response_optional_fields' => 'buyer_user_id,buyer_username'
+        ];
+        $expectedResponse = ['order_list' => []];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'GET', 
+                'order/get_booking_detail', 
+                [
+                    RequestOptions::QUERY => $expectedParams
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->order->getBookingDetail($orderIds, $params);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
     public function testSplitOrder()
     {
         $orderSn = '123456789';
