@@ -102,10 +102,14 @@ class Client
 
     protected $custom_hostname = null;
 
-    public function __construct($partner_id, $partner_key)
+    // default options for Guzzle client
+    protected $options = [];
+
+    public function __construct($partner_id, $partner_key, $options = [])
     {
-        $this->partner_id = intval($partner_id);
+        $this->partner_id = $partner_id;
         $this->partner_key = $partner_key;
+        $this->options = $options;
     }
 
     public function setCustomHostname($hostname)
@@ -216,11 +220,13 @@ class Client
             return $request->withUri($uri);
         }));
 
-        return new GuzzleHttpClient([
+        $options = array_merge([
             'handler' => $stack,
             'base_uri' => $this->baseUrl(),
-            RequestOptions::HTTP_ERRORS => false,
-        ]);
+            RequestOptions::HTTP_ERRORS => false, // disable throw exception on http 4xx, manual handle it
+        ], $this->options);
+
+        return new GuzzleHttpClient($options);
     }
 
     public function call($method, $api, $options = [])
