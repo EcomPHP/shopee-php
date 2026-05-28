@@ -53,7 +53,7 @@ class ClientTest extends TestCase
         $method = $reflectionClass->getMethod('baseUrl');
         $method->setAccessible(true);
         
-        $this->assertEquals('https://partner.test-stable.shopeemobile.com/api/v2/', $method->invoke($client));
+        $this->assertEquals('https://openplatform.sandbox.test-stable.shopee.sg/api/v2/', $method->invoke($client));
     }
     
     public function testChinaRegion()
