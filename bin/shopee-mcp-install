@@ -1,0 +1,82 @@
+#!/usr/bin/env php
+<?php
+
+declare(strict_types=1);
+
+$cwd = getcwd();
+if ($cwd === false) {
+    fwrite(STDERR, "Unable to determine current directory.\n");
+    exit(1);
+}
+
+$packageRoot = dirname(__DIR__);
+$serverEntrypoint = $packageRoot.'/bin/shopee-mcp-server';
+$sourceSkillPath = $packageRoot.'/.ai/skills/shopee-api-doc-first/SKILL.md';
+
+if (!is_file($serverEntrypoint)) {
+    fwrite(STDERR, "Shopee MCP server entrypoint not found at: {$serverEntrypoint}\n");
+    exit(1);
+}
+
+if (!is_file($sourceSkillPath)) {
+    fwrite(STDERR, "Shopee AI skill source not found at: {$sourceSkillPath}\n");
+    exit(1);
+}
+
+$configPath = $cwd.'/.ai/mcp/mcp.json';
+$config = [
+    'mcpServers' => [],
+];
+
+if (is_file($configPath)) {
+    $content = file_get_contents($configPath);
+    if ($content === false) {
+        fwrite(STDERR, "Failed to read existing config: {$configPath}\n");
+        exit(1);
+    }
+
+    $decoded = json_decode($content, true);
+    if (!is_array($decoded)) {
+        fwrite(STDERR, "Existing mcp.json is not valid JSON.\n");
+        exit(1);
+    }
+
+    $config = $decoded;
+    if (!isset($config['mcpServers']) || !is_array($config['mcpServers'])) {
+        $config['mcpServers'] = [];
+    }
+}
+
+$config['mcpServers']['shopee'] = [
+    'command' => 'php',
+    'args' => [$serverEntrypoint],
+];
+
+$encoded = json_encode($config, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+if ($encoded === false) {
+    fwrite(STDERR, "Failed to encode .mcp.json content.\n");
+    exit(1);
+}
+
+$encoded .= "\n";
+
+if (file_put_contents($configPath, $encoded) === false) {
+    fwrite(STDERR, "Failed to write MCP config: {$configPath}\n");
+    exit(1);
+}
+
+$targetSkillDir = $cwd.'/.ai/skills/shopee-api-doc-first';
+if (!is_dir($targetSkillDir) && !mkdir($targetSkillDir, 0777, true) && !is_dir($targetSkillDir)) {
+    fwrite(STDERR, "Failed to create AI skill directory: {$targetSkillDir}\n");
+    exit(1);
+}
+
+$targetSkillPath = $targetSkillDir.'/SKILL.md';
+if (!copy($sourceSkillPath, $targetSkillPath)) {
+    fwrite(STDERR, "Failed to install AI skill file: {$targetSkillPath}\n");
+    exit(1);
+}
+
+fwrite(STDOUT, "Shopee MCP server installed in {$configPath}\n");
+fwrite(STDOUT, "Shopee AI skill installed in {$targetSkillPath}\n");
+fwrite(STDOUT, "You can now add environment variables under mcpServers.shopee.env if needed.\n");

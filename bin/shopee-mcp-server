@@ -1,0 +1,613 @@
+#!/usr/bin/env php
+<?php
+
+require dirname(__DIR__).'/vendor/autoload.php';
+
+use EcomPHP\Shopee\Client;
+use GuzzleHttp\Client as GuzzleHttpClient;
+
+class Server
+{
+    /**
+     * @var string
+     */
+    private $projectRoot;
+
+    /**
+     * @var array<int, array<string, string>>|null
+     */
+    private $documentIndex;
+
+    /**
+     * @var callable|null
+     */
+    private $documentFetcher;
+
+    public function __construct($projectRoot, $documentFetcher = null)
+    {
+        $this->projectRoot = rtrim($projectRoot, '/');
+        $this->documentFetcher = is_callable($documentFetcher) ? $documentFetcher : null;
+    }
+
+    public function listTools()
+    {
+        return [
+            [
+                'name' => 'search_documents',
+                'description' => 'Search Shopee API SDK and docs references by keyword.',
+                'inputSchema' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'query' => [
+                            'type' => 'string',
+                            'description' => 'Keyword to search in local SDK docs index.',
+                        ],
+                    ],
+                    'required' => ['query'],
+                ],
+            ],
+            [
+                'name' => 'get_auth_url',
+                'description' => 'Generate Shopee authorization URL for seller app OAuth flow.',
+                'inputSchema' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'redirect_uri' => [
+                            'type' => 'string',
+                            'description' => 'OAuth callback URL.',
+                        ],
+                    ],
+                ],
+            ],
+            [
+                'name' => 'get_access_token',
+                'description' => 'Exchange authorization code for access and refresh token.',
+                'inputSchema' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'code' => [
+                            'type' => 'string',
+                        ],
+                        'shop_id' => [
+                            'type' => ['integer', 'string'],
+                        ],
+                    ],
+                    'required' => ['code', 'shop_id'],
+                ],
+            ],
+            [
+                'name' => 'get_order_list',
+                'description' => 'Call Shopee order/get_order_list API via SDK.',
+                'inputSchema' => [
+                    'type' => 'object',
+                    'properties' => [
+                        'shop_id' => [
+                            'type' => ['integer', 'string'],
+                            'description' => 'Required when SHOPEE_SHOP_ID env is not set.',
+                        ],
+                        'access_token' => [
+                            'type' => 'string',
+                            'description' => 'Required when SHOPEE_ACCESS_TOKEN env is not set.',
+                        ],
+                        'params' => [
+                            'type' => 'object',
+                            'description' => 'Optional order query parameters.',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    public function callTool($name, array $arguments)
+    {
+        switch ($name) {
+            case 'search_documents':
+                return $this->searchDocuments($arguments);
+            case 'get_auth_url':
+                return $this->getAuthUrl($arguments);
+            case 'get_access_token':
+                return $this->getAccessToken($arguments);
+            case 'get_order_list':
+                return $this->getOrderList($arguments);
+            default:
+                throw new \InvalidArgumentException('Unknown tool: ' . $name);
+        }
+    }
+
+    private function buildClient()
+    {
+        $partnerId = getenv('SHOPEE_PARTNER_ID');
+        $partnerKey = getenv('SHOPEE_PARTNER_KEY');
+
+        if (!$partnerId || !$partnerKey) {
+            throw new \InvalidArgumentException('Missing SHOPEE_PARTNER_ID or SHOPEE_PARTNER_KEY environment variables.');
+        }
+
+        $client = new Client($partnerId, $partnerKey);
+
+        if (getenv('SHOPEE_DEBUG_MODE')) {
+            $client->useDebugMode();
+        }
+
+        if (getenv('SHOPEE_REGION') === 'cn') {
+            $client->useChinaRegion();
+        }
+
+        if (getenv('SHOPEE_REGION') === 'br') {
+            $client->useBrazilRegion();
+        }
+
+        $hostname = getenv('SHOPEE_CUSTOM_HOSTNAME');
+        if ($hostname) {
+            $client->setCustomHostname($hostname);
+        }
+
+        return $client;
+    }
+
+    private function getAuthUrl(array $arguments)
+    {
+        $redirectUri = isset($arguments['redirect_uri']) ? $arguments['redirect_uri'] : getenv('SHOPEE_REDIRECT_URI');
+        if (!$redirectUri) {
+            throw new \InvalidArgumentException('redirect_uri is required (argument or SHOPEE_REDIRECT_URI env).');
+        }
+
+        $client = $this->buildClient();
+        $url = $client->auth()->createAuthRequest($redirectUri, true);
+
+        return [
+            'auth_url' => $url,
+        ];
+    }
+
+    private function getAccessToken(array $arguments)
+    {
+        if (empty($arguments['code']) || !isset($arguments['shop_id'])) {
+            throw new \InvalidArgumentException('code and shop_id are required.');
+        }
+
+        $client = $this->buildClient();
+        return $client->auth()->getToken($arguments['code'], $arguments['shop_id']);
+    }
+
+    private function getOrderList(array $arguments)
+    {
+        $shopId = isset($arguments['shop_id']) ? $arguments['shop_id'] : getenv('SHOPEE_SHOP_ID');
+        $accessToken = isset($arguments['access_token']) ? $arguments['access_token'] : getenv('SHOPEE_ACCESS_TOKEN');
+
+        if (!$shopId || !$accessToken) {
+            throw new \InvalidArgumentException('shop_id and access_token are required (arguments or env variables).');
+        }
+
+        $client = $this->buildClient();
+        $client->setAccessToken($shopId, $accessToken);
+
+        $params = [];
+        if (isset($arguments['params']) && is_array($arguments['params'])) {
+            $params = $arguments['params'];
+        }
+
+        return $client->Order->getOrderList($params);
+    }
+
+    private function searchDocuments(array $arguments)
+    {
+        if (empty($arguments['query'])) {
+            throw new \InvalidArgumentException('query is required.');
+        }
+
+        $queryText = trim($arguments['query']);
+        $query = strtolower($queryText);
+        $isApiName = $this->isApiName($queryText);
+        $index = $this->buildDocumentIndex();
+        $matches = [];
+
+        foreach ($index as $item) {
+            $haystack = strtolower($item['title'] . ' ' . $item['keywords']);
+            if (strpos($haystack, $query) !== false) {
+                $matches[] = $item;
+            }
+        }
+
+        $result = [
+            'query' => $arguments['query'],
+            'query_type' => $isApiName ? 'api_name' : 'keyword',
+            'count' => count($matches),
+            'results' => array_slice($matches, 0, 20),
+        ];
+
+        if ($isApiName) {
+            $officialDocument = $this->fetchOfficialDocument($arguments['query']);
+            $result['results'] = $this->applyOfficialDefineDescription($result['results'], $officialDocument);
+        }
+
+        $result['resources'] = $this->collectResources($result['results']);
+
+        return $result;
+    }
+
+    /**
+     * @param array<int, array<string, string>> $results
+     * @return array<int, string>
+     */
+    private function collectResources(array $results)
+    {
+        $resources = [];
+        foreach ($results as $item) {
+            if (!isset($item['resource']) || !is_string($item['resource']) || $item['resource'] === '') {
+                continue;
+            }
+
+            $resources[$item['resource']] = true;
+        }
+
+        return array_keys($resources);
+    }
+
+    /**
+     * @param array<int, array<string, string>> $results
+     * @param array<string, mixed> $officialDocument
+     * @return array<int, array<string, string>>
+     */
+    private function applyOfficialDefineDescription(array $results, array $officialDocument)
+    {
+        if (!isset($officialDocument['data']) || !is_array($officialDocument['data'])) {
+            return $results;
+        }
+
+        if (!isset($officialDocument['data']['define']) || !is_string($officialDocument['data']['define'])) {
+            return $results;
+        }
+
+        $define = $officialDocument['data']['define'];
+        if ($define === '') {
+            return $results;
+        }
+
+        foreach ($results as $index => $item) {
+            $results[$index]['description'] = $define;
+        }
+
+        return $results;
+    }
+
+    /**
+     * @param string $query
+     * @return bool
+     */
+    private function isApiName($query)
+    {
+        return preg_match('/^v2\.[a-z0-9_\.]+$/i', trim($query)) === 1;
+    }
+
+    /**
+     * @param string $apiName
+     * @return array<string, mixed>
+     */
+    private function fetchOfficialDocument($apiName)
+    {
+        $url = $this->buildApiUrl($apiName);
+
+        try {
+            if ($this->documentFetcher !== null) {
+                $fetched = call_user_func($this->documentFetcher, $url, $apiName);
+                if (!is_array($fetched)) {
+                    throw new \RuntimeException('Custom document fetcher must return an array.');
+                }
+
+                return $fetched;
+            }
+
+            $client = new GuzzleHttpClient([
+                'timeout' => 10,
+            ]);
+
+            $response = $client->request('GET', $url, [
+                'headers' => ['Accept' => 'application/json'],
+                'http_errors' => false,
+            ]);
+
+            $body = (string) $response->getBody();
+            $decoded = json_decode($body, true);
+
+            if (!is_array($decoded)) {
+                throw new \RuntimeException('Unable to parse Shopee document API JSON response.');
+            }
+
+            return [
+                'status_code' => $response->getStatusCode(),
+                'data' => $decoded,
+            ];
+        } catch (\Throwable $exception) {
+            return [
+                'error' => $exception->getMessage(),
+            ];
+        }
+    }
+
+    private function buildDocumentIndex()
+    {
+        if (is_array($this->documentIndex)) {
+            return $this->documentIndex;
+        }
+
+        $results = [
+            [
+                'title' => 'Shopee Open Platform Home',
+                'keywords' => 'shopee open platform oauth authorization token order product api',
+                'source' => 'official',
+                'description' => 'Public Shopee Open Platform documentation homepage for API references and guides.',
+                'resource' => 'OpenPlatform',
+                'method' => 'home',
+            ],
+        ];
+
+        $resourceFiles = glob($this->projectRoot . '/src/Resources/*.php');
+        foreach ($resourceFiles as $file) {
+            $content = file_get_contents($file);
+            if ($content === false) {
+                continue;
+            }
+
+            $resourceName = basename($file, '.php');
+            $entries = $this->extractResourceDocumentEntries($content, $resourceName, basename($file));
+            foreach ($entries as $entry) {
+                $results[] = $entry;
+            }
+        }
+
+        $this->documentIndex = $results;
+
+        return $this->documentIndex;
+    }
+
+    /**
+     * @param string $content
+     * @param string $resourceName
+     * @param string $sourceFile
+     * @return array<int, array<string, string>>
+     */
+    private function extractResourceDocumentEntries($content, $resourceName, $sourceFile)
+    {
+        $entries = [];
+
+        if (!preg_match_all('/\/\*\*(.*?)\*\/\s*public function\s+([a-zA-Z0-9_]+)\s*\(/s', $content, $matches, PREG_SET_ORDER)) {
+            return $entries;
+        }
+
+        foreach ($matches as $match) {
+            $docBlock = $match[1];
+            $methodName = $match[2];
+            $apiName = $this->extractApiName($docBlock);
+            $description = $this->extractDescription($docBlock);
+
+            if (!$apiName && !$description) {
+                continue;
+            }
+
+            $title = $apiName ? $apiName : $resourceName . '.' . $methodName;
+            $keywordParts = [$title, $resourceName, $methodName];
+            if ($description) {
+                $keywordParts[] = $description;
+            }
+
+            $entries[] = [
+                'title' => $title,
+                'keywords' => implode(' ', $keywordParts),
+                'source' => 'sdk:' . $sourceFile,
+                'description' => $description ? $description : 'Shopee API method exposed by SDK resource.',
+                'resource' => $resourceName,
+                'method' => $methodName,
+            ];
+        }
+
+        return $entries;
+    }
+
+    /**
+     * @param string $docBlock
+     * @return string|null
+     */
+    private function extractApiName($docBlock)
+    {
+        if (preg_match('/API:\s*(v2\.[a-z0-9_\.]+)/i', $docBlock, $match)) {
+            return trim($match[1]);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param string $docBlock
+     * @return string
+     */
+    private function extractDescription($docBlock)
+    {
+        $lines = preg_split('/\R/', $docBlock);
+        if (!is_array($lines)) {
+            return '';
+        }
+
+        $descriptionLines = [];
+        foreach ($lines as $line) {
+            $cleanLine = trim(preg_replace('/^\s*\*\s?/', '', $line));
+            if ($cleanLine === '' || strpos($cleanLine, '@') === 0 || stripos($cleanLine, 'API:') === 0) {
+                continue;
+            }
+
+            $descriptionLines[] = rtrim($cleanLine, '.');
+        }
+
+        if (empty($descriptionLines)) {
+            return '';
+        }
+
+        return implode('. ', $descriptionLines) . '.';
+    }
+
+    /**
+     * @param string $keyword
+     * @return string
+     */
+    private function buildApiUrl($keyword)
+    {
+        if (preg_match('/^v2\./i', $keyword)) {
+            return 'https://open.shopee.com/opservice/api/v1/doc/api/?version=2&api_name=' . rawurlencode($keyword);
+        }
+
+        return 'https://open.shopee.com/global-search?keyword=' . rawurlencode($keyword);
+    }
+}
+
+$server = new Server(dirname(__DIR__));
+
+/**
+ * Ghi message theo chuẩn MCP (Mỗi JSON object nằm trên một dòng)
+ */
+function writeMessage(array $payload)
+{
+    $json = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    if ($json === false) {
+        return;
+    }
+
+    // MCP Stdio chỉ cần một dòng JSON và kết thúc bằng dấu xuống dòng \n
+    fwrite(STDOUT, $json."\n");
+    fflush(STDOUT);
+}
+
+/**
+ * Đọc message theo chuẩn MCP (Đọc từng dòng một)
+ */
+function readMessage()
+{
+    // Đọc chính xác 1 dòng từ STDIN
+    $line = fgets(STDIN);
+
+    if ($line === false) {
+        return null;
+    }
+
+    $trimmed = trim($line);
+    if ($trimmed === '') {
+        return null;
+    }
+
+    // Parse trực tiếp dòng đó thành array
+    $decoded = json_decode($trimmed, true);
+    if (!is_array($decoded)) {
+        return null;
+    }
+
+    return $decoded;
+}
+
+// Vòng lặp xử lý request chính
+while (true) {
+    $request = readMessage();
+
+    if ($request === null) {
+        if (feof(STDIN)) {
+            exit(0);
+        }
+        continue;
+    }
+
+    if (!array_key_exists('method', $request)) {
+        continue;
+    }
+
+    $method = $request['method'];
+    // Xử lý các thông báo notification không cần ID
+    if ($method === 'notifications/initialized' || $method === 'initialized') {
+        continue;
+    }
+
+    if (!array_key_exists('id', $request)) {
+        continue;
+    }
+
+    $id = $request['id'];
+
+    try {
+        if ($method === 'initialize') {
+            writeMessage([
+                'jsonrpc' => '2.0',
+                'id' => $id,
+                'result' => [
+                    'protocolVersion' => '2024-11-05',
+                    'serverInfo' => [
+                        'name' => 'shopee-php-mcp',
+                        'version' => '0.1.0',
+                    ],
+                    'capabilities' => [
+                        'tools' => new stdClass(),
+                    ],
+                ],
+            ]);
+            continue;
+        }
+
+        if ($method === 'tools/list') {
+            writeMessage([
+                'jsonrpc' => '2.0',
+                'id' => $id,
+                'result' => [
+                    'tools' => $server->listTools(),
+                ],
+            ]);
+            continue;
+        }
+
+        if ($method === 'tools/call') {
+            $params = isset($request['params']) && is_array($request['params']) ? $request['params'] : [];
+            $name = isset($params['name']) ? $params['name'] : '';
+            $arguments = isset($params['arguments']) && is_array($params['arguments']) ? $params['arguments'] : [];
+            $result = $server->callTool($name, $arguments);
+
+            writeMessage([
+                'jsonrpc' => '2.0',
+                'id' => $id,
+                'result' => [
+                    'content' => [
+                        [
+                            'type' => 'text',
+                            'text' => json_encode($result, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES),
+                        ],
+                    ],
+                ],
+            ]);
+            continue;
+        }
+
+        if ($method === 'ping') {
+            writeMessage([
+                'jsonrpc' => '2.0',
+                'id' => $id,
+                'result' => [
+                    'ok' => true,
+                ],
+            ]);
+            continue;
+        }
+
+        writeMessage([
+            'jsonrpc' => '2.0',
+            'id' => $id,
+            'error' => [
+                'code' => -32601,
+                'message' => 'Method not found: '.$method,
+            ],
+        ]);
+    } catch (Throwable $exception) {
+        writeMessage([
+            'jsonrpc' => '2.0',
+            'id' => $id,
+            'error' => [
+                'code' => -32000,
+                'message' => $exception->getMessage(),
+            ],
+        ]);
+    }
+}
