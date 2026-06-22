@@ -220,6 +220,9 @@ class Chat extends Resource
         ]);
     }
 
+    /**
+     * API: v2.sellerchat.delete_message
+     */
     public function deleteMessage($message_id, $message_type)
     {
         return $this->call('POST', 'sellerchat/delete_message', [

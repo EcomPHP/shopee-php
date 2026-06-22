@@ -16,7 +16,7 @@ use GuzzleHttp\RequestOptions;
 class AccountHealth extends Resource
 {
     /**
-     * API: v2.account_health.shop_performance
+     * API: v2.account_health.get_shop_performance
      */
     public function getShopPerformance()
     {
@@ -34,7 +34,7 @@ class AccountHealth extends Resource
     }
 
     /**
-     * v2.account_health.get_metric_source_detail
+     * API: v2.account_health.get_metric_source_detail
      */
     public function getMetricSourceDetail($metric_id, $page_no = 1, $page_size = 100)
     {
@@ -48,7 +48,7 @@ class AccountHealth extends Resource
     }
 
     /**
-     * v2.account_health.get_penalty_point_history
+     * API: v2.account_health.get_penalty_point_history
      */
     public function getPenaltyPointHistory($violation_type = null, $page_no = 1, $page_size = 100)
     {
@@ -62,7 +62,7 @@ class AccountHealth extends Resource
     }
 
     /**
-     * v2.account_health.get_punishment_history
+     * API: v2.account_health.get_punishment_history
      */
     public function getPunishmentHistory($punishment_status, $page_no = 1, $page_size = 100)
     {
@@ -76,7 +76,7 @@ class AccountHealth extends Resource
     }
 
     /**
-     * v2.account_health.get_listings_with_issues
+     * API: v2.account_health.get_listings_with_issues
      */
     public function getListingsWithIssues($page_no = 1, $page_size = 100)
     {
@@ -89,7 +89,7 @@ class AccountHealth extends Resource
     }
 
     /**
-     * v2.account_health.get_late_orders
+     * API: v2.account_health.get_late_orders
      */
     public function getLateOrders($page_no = 1, $page_size = 100)
     {

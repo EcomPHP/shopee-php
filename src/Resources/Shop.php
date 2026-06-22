@@ -68,6 +68,9 @@ class Shop extends Resource
         ]);
     }
 
+    /**
+     * API: v2.shop.get_authorised_reseller_brand
+     */
     public function getAuthorizedResellerBrand($params = [])
     {
         $params = array_merge([

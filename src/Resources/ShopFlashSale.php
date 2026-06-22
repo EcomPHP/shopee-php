@@ -15,6 +15,9 @@ use GuzzleHttp\RequestOptions;
 
 class ShopFlashSale extends Resource
 {
+    /**
+     * API: v2.shop_flash_sale.get_time_slot_id
+     */
     public function getTimeSlotId($start_time, $end_time)
     {
         return $this->call('GET', 'shop_flash_sale/get_time_slot_id', [
@@ -25,6 +28,9 @@ class ShopFlashSale extends Resource
         ]);
     }
 
+    /**
+     * API: v2.shop_flash_sale.create_shop_flash_sale
+     */
     public function createShopFlashSale($timeslot_id)
     {
         return $this->call('POST', 'shop_flash_sale/create_shop_flash_sale', [
@@ -34,11 +40,17 @@ class ShopFlashSale extends Resource
         ]);
     }
 
+    /**
+     * API: v2.shop_flash_sale.get_item_criteria
+     */
     public function getItemCriteria()
     {
         return $this->call('GET', 'shop_flash_sale/get_item_criteria');
     }
 
+    /**
+     * API: v2.shop_flash_sale.add_shop_flash_sale_items
+     */
     public function addShopFlashSaleItems($flash_sale_id, $items)
     {
         return $this->call('POST', 'shop_flash_sale/add_shop_flash_sale_items', [
@@ -49,6 +61,9 @@ class ShopFlashSale extends Resource
         ]);
     }
 
+    /**
+     * API: v2.shop_flash_sale.get_shop_flash_sale_list
+     */
     public function getShopFlashSaleList($params = [])
     {
         $params = array_merge([
@@ -62,6 +77,9 @@ class ShopFlashSale extends Resource
         ]);
     }
 
+    /**
+     * API: v2.shop_flash_sale.get_shop_flash_sale
+     */
     public function getShopFlashSale($flash_sale_id)
     {
         return $this->call('GET', 'shop_flash_sale/get_shop_flash_sale', [
@@ -71,6 +89,9 @@ class ShopFlashSale extends Resource
         ]);
     }
 
+    /**
+     * API: v2.shop_flash_sale.get_shop_flash_sale_items
+     */
     public function getShopFlashSaleItems($flash_sale_id, $offset = 0, $limit = 10)
     {
         return $this->call('GET', 'shop_flash_sale/get_shop_flash_sale_items', [
@@ -82,6 +103,9 @@ class ShopFlashSale extends Resource
         ]);
     }
 
+    /**
+     * API: v2.shop_flash_sale.update_shop_flash_sale
+     */
     public function updateShopFlashSale($flash_sale_id, $status)
     {
         return $this->call('POST', 'shop_flash_sale/update_shop_flash_sale', [
@@ -92,6 +116,9 @@ class ShopFlashSale extends Resource
         ]);
     }
 
+    /**
+     * API: v2.shop_flash_sale.update_shop_flash_sale_items
+     */
     public function updateShopFlashSaleItems($flash_sale_id, $items)
     {
         return $this->call('POST', 'shop_flash_sale/update_shop_flash_sale_items', [
@@ -102,6 +129,9 @@ class ShopFlashSale extends Resource
         ]);
     }
 
+    /**
+     * API: v2.shop_flash_sale.delete_shop_flash_sale
+     */
     public function deleteShopFlashSale($flash_sale_id)
     {
         return $this->call('POST', 'shop_flash_sale/delete_shop_flash_sale', [
@@ -111,6 +141,9 @@ class ShopFlashSale extends Resource
         ]);
     }
 
+    /**
+     * API: v2.shop_flash_sale.delete_shop_flash_sale_items
+     */
     public function deleteShopFlashSaleItems($flash_sale_id, $item_ids)
     {
         return $this->call('POST', 'shop_flash_sale/delete_shop_flash_sale_items', [

@@ -15,6 +15,9 @@ use EcomPHP\Shopee\Resource;
 
 class Product extends Resource
 {
+    /**
+     * API: v2.product.get_category
+     */
     public function getCategory($params = [])
     {
         return $this->call('GET', 'product/get_category', [
@@ -22,6 +25,9 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.get_attributes
+     */
     public function getAttributes($category_id, $language = null)
     {
         $params = [
@@ -37,6 +43,9 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.get_attribute_tree
+     */
     public function getAttributeTree($category_id_list, $language = null)
     {
         $params = [
@@ -52,6 +61,9 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.get_brand_list
+     */
     public function getBrandList($category_id, $params = [])
     {
         $params = array_merge([
@@ -67,6 +79,9 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.get_model_list
+     */
     public function getModelList($item_id)
     {
         return $this->call('GET', 'product/get_model_list', [
@@ -76,6 +91,9 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.get_item_list
+     */
     public function getItemList($params = [])
     {
         // if you want to search multiple item status, please pass params as string, pass an array will be serialized by the http_build_query function and it may skip duplicate params
@@ -93,6 +111,9 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.get_item_base_info
+     */
     public function getItemBaseInfo($item_id_list, $need_tax_info = false, $need_complaint_policy = false)
     {
         $params = [
@@ -106,6 +127,9 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.boost_item
+     */
     public function boostItem($item_id_list)
     {
         $params = [
@@ -117,11 +141,17 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.get_boosted_list
+     */
     public function getBoostedList()
     {
         return $this->call('GET', 'product/get_boosted_list');
     }
 
+    /**
+     * API: v2.product.get_comment
+     */
     public function getComment($params = [])
     {
         $params = array_merge([
@@ -134,6 +164,9 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.reply_comment
+     */
     public function replyComment($comment_id, $comment)
     {
         return $this->call('POST', 'product/reply_comment', [
@@ -148,6 +181,9 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.add_item
+     */
     public function addItem($params)
     {
         return $this->call('POST', 'product/add_item', [
@@ -155,6 +191,9 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.update_item
+     */
     public function updateItem($item_id, $params = [])
     {
         $params['item_id'] = $item_id;
@@ -164,6 +203,9 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.delete_item
+     */
     public function deleteItem($item_id)
     {
         return $this->call('POST', 'product/delete_item', [
@@ -173,6 +215,9 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.init_tier_variation
+     */
     public function initTierVariation($item_id, $tier_variation, $model)
     {
         $params = [
@@ -186,6 +231,9 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.update_tier_variation
+     */
     public function updateTierVariation($item_id, $tier_variation, $model_list)
     {
         $params = [
@@ -199,6 +247,9 @@ class Product extends Resource
         ]);
     }
 
+    /**
+     * API: v2.product.add_model
+     */
     public function addModel($item_id, $model_list)
     {
         $params = [
