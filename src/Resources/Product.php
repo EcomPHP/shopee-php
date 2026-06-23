@@ -17,6 +17,7 @@ class Product extends Resource
 {
     /**
      * API: v2.product.get_category
+     * Get category tree data. More detail please check https://open.shopee.com/developer-guide/209
      */
     public function getCategory($params = [])
     {
@@ -45,6 +46,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.get_attribute_tree
+     * Get the attribute tree for categories
      */
     public function getAttributeTree($category_id_list, $language = null)
     {
@@ -63,6 +65,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.get_brand_list
+     * Get the brand data of a leaf category. More detail please check: https://open.shopee.com/developer-guide/209
      */
     public function getBrandList($category_id, $params = [])
     {
@@ -81,6 +84,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.get_model_list
+     * Get model list of an item.
      */
     public function getModelList($item_id)
     {
@@ -93,6 +97,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.get_item_list
+     * Use this call to get a list of items.
      */
     public function getItemList($params = [])
     {
@@ -113,6 +118,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.get_item_base_info
+     * Use this api to get basic info of item by item_id list.
      */
     public function getItemBaseInfo($item_id_list, $need_tax_info = false, $need_complaint_policy = false)
     {
@@ -129,6 +135,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.boost_item
+     * Boost item.
      */
     public function boostItem($item_id_list)
     {
@@ -143,6 +150,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.get_boosted_list
+     * Get boosted item list.
      */
     public function getBoostedList()
     {
@@ -151,6 +159,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.get_comment
+     * Use this api to get comment by shop_id, item_id, or comment_id, get up to 1000 comments.
      */
     public function getComment($params = [])
     {
@@ -166,6 +175,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.reply_comment
+     * Use this api to reply comments from buyers in batch.
      */
     public function replyComment($comment_id, $comment)
     {
@@ -183,6 +193,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.add_item
+     * {"content":"<p>Add a new item.</p>","raw_content":[{"name":"paragraph","children":[{"data":"Add a new item."}]}]}
      */
     public function addItem($params)
     {
@@ -193,6 +204,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.update_item
+     * Update item.
      */
     public function updateItem($item_id, $params = [])
     {
@@ -205,6 +217,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.delete_item
+     * Use this call to delete a product item.
      */
     public function deleteItem($item_id)
     {
@@ -217,6 +230,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.init_tier_variation
+     * This API allows you to update the tier structure of a product. Defining only color creates one tier, while color + size creates two tiers (maximum supported). Supported changes include: no tier ↔ one/two tiers, one tier ↔ two/no tier, and two tiers ↔ one/no tier. For details, see Developer Guide.  Please wait at least 5 seconds after creating an item before creating variants, as processing may be delayed.
      */
     public function initTierVariation($item_id, $tier_variation, $model)
     {
@@ -233,6 +247,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.update_tier_variation
+     * This api can only be used without changing the tier structure, you can add options, delete options, and update the option image by this api. More detail please check: https://open.shopee.com/developer-guide/219
      */
     public function updateTierVariation($item_id, $tier_variation, $model_list)
     {
@@ -249,6 +264,7 @@ class Product extends Resource
 
     /**
      * API: v2.product.add_model
+     * Add model. More detail please check: https://open.shopee.com/developer-guide/219
      */
     public function addModel($item_id, $model_list)
     {

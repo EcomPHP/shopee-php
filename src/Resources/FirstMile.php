@@ -17,6 +17,7 @@ class FirstMile extends Resource
 {
     /**
      * API: v2.first_mile.get_unbind_order_list
+     * Use this api to get unbind order list. It will only return orders unbound to first-mile that were created within the past 6 months. 
      */
     public function getUnbindOrderList($params = [])
     {
@@ -30,6 +31,7 @@ class FirstMile extends Resource
 
     /**
      * API: v2.first_mile.get_detail
+     * Use this api to get first mile detail.
      */
     public function getDetail($first_mile_tracking_number, $cursor = null)
     {
@@ -48,6 +50,7 @@ class FirstMile extends Resource
 
     /**
      * API: v2.first_mile.generate_first_mile_tracking_number
+     * Use this api to generate first mile tracking number.
      */
     public function generateFirstMileTrackingNumber($declare_date, $quantity = 1)
     {
@@ -61,6 +64,7 @@ class FirstMile extends Resource
 
     /**
      * API: v2.first_mile.bind_first_mile_tracking_number
+     * Use this api to bind first mile tracking number.
      */
     public function bindFirstMileTrackingNumber($data)
     {
@@ -71,6 +75,7 @@ class FirstMile extends Resource
 
     /**
      * API: v2.first_mile.unbind_first_mile_tracking_number
+     * Use this api to unbind first mile.
      */
     public function unbindFirstMileTrackingNumber($first_mile_tracking_number, $order_list)
     {
@@ -84,6 +89,7 @@ class FirstMile extends Resource
 
     /**
      * API: v2.first_mile.get_tracking_number_list
+     * Use this api to get first mile tracking number list.
      */
     public function getTrackingNumberList($params = [])
     {
@@ -98,6 +104,7 @@ class FirstMile extends Resource
 
     /**
      * API: v2.first_mile.get_waybill
+     * Use this api to get first mile waybill file.
      */
     public function getWaybill($first_mile_tracking_number_list)
     {
@@ -110,6 +117,7 @@ class FirstMile extends Resource
 
     /**
      * API: v2.first_mile.get_channel_list
+     * Use this api to get first mile channel list.
      */
     public function getChannelList($region = null)
     {

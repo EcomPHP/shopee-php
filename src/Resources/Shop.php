@@ -70,6 +70,7 @@ class Shop extends Resource
 
     /**
      * API: v2.shop.get_authorised_reseller_brand
+     * Get the authorised reseller brand list for the shop.
      */
     public function getAuthorizedResellerBrand($params = [])
     {

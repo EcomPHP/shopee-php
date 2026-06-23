@@ -17,6 +17,7 @@ class Discount extends Resource
 {
     /**
      * API: v2.discount.add_discount
+     * Use this api to add shop discount activity
      */
     public function addDiscount($data)
     {
@@ -27,6 +28,7 @@ class Discount extends Resource
 
     /**
      * API: v2.discount.add_discount_item
+     * Use this api to add shop discount item.
      */
     public function addDiscountItem($discount_id, $item_list)
     {
@@ -40,6 +42,7 @@ class Discount extends Resource
 
     /**
      * API: v2.discount.delete_discount
+     * Use this api to delete one discount activity
      */
     public function deleteDiscount($discount_id)
     {
@@ -52,6 +55,7 @@ class Discount extends Resource
 
     /**
      * API: v2.discount.delete_discount_item
+     * Use this api to delete items of the discount activity
      */
     public function deleteDiscountItem($discount_id, $item_id, $model_id = null)
     {
@@ -66,6 +70,7 @@ class Discount extends Resource
 
     /**
      * API: v2.discount.get_discount
+     * Use this api to get one shop discount activity detail
      */
     public function getDiscount($discount_id, $params = [])
     {
@@ -81,6 +86,7 @@ class Discount extends Resource
 
     /**
      * API: v2.discount.get_discount_list
+     * Use this api to get shop discount activity list
      */
     public function getDiscountList($params = [])
     {
@@ -95,6 +101,7 @@ class Discount extends Resource
 
     /**
      * API: v2.discount.update_discount
+     * Use this api to update one discount information
      */
     public function updateDiscount($discount_id, $data)
     {
@@ -107,6 +114,7 @@ class Discount extends Resource
 
     /**
      * API: v2.discount.update_discount_item
+     * Use this api to update items of the discount promotion.
      */
     public function updateDiscountItem($discount_id, $item_list)
     {
@@ -120,6 +128,7 @@ class Discount extends Resource
 
     /**
      * API: v2.discount.end_discount
+     * Use this api to end shop discount activity
      */
     public function endDiscount($discount_id)
     {

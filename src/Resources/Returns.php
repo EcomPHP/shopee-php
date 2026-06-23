@@ -17,6 +17,7 @@ class Returns extends Resource
 {
     /**
      * API: v2.returns.get_return_detail
+     * Use this api to get detail information of a return by return sn.
      */
     public function getReturnDetail($return_sn)
     {
@@ -29,6 +30,7 @@ class Returns extends Resource
 
     /**
      * API: v2.returns.get_return_list
+     * Use this api to get detail information of many return by shop id.
      */
     public function getReturnList($params = [])
     {
@@ -42,6 +44,7 @@ class Returns extends Resource
 
     /**
      * API: v2.returns.confirm
+     * Confirm refund
      */
     public function confirm($return_sn)
     {
@@ -54,6 +57,9 @@ class Returns extends Resource
 
     /**
      * API: v2.returns.dispute
+     * Dispute return.
+     * 
+     * Support to raise dispute when return_status in REQUESTED / PROCESSING/ACCEPTED
      */
     public function dispute($return_sn, $email, $extra_params = [])
     {
@@ -67,6 +73,7 @@ class Returns extends Resource
 
     /**
      * API: v2.returns.get_available_solutions
+     * Get the available solutions offered to buyers.
      */
     public function getAvailableSolutions($return_sn)
     {
@@ -79,6 +86,7 @@ class Returns extends Resource
 
     /**
      * API: v2.returns.offer
+     * v2.returns.offer
      */
     public function offer($return_sn, $proposed_solution, $proposed_adjusted_refund_amount = null)
     {
@@ -98,6 +106,7 @@ class Returns extends Resource
 
     /**
      * API: v2.returns.accept_offer
+     * v2.returns.accept_offer
      */
     public function acceptOffer($return_sn)
     {
@@ -110,6 +119,7 @@ class Returns extends Resource
 
     /**
      * API: v2.returns.convert_image
+     * Convert a specific format and pictures within 10M into url.
      */
     public function convertImage($return_sn, $upload_image)
     {
@@ -128,6 +138,7 @@ class Returns extends Resource
 
     /**
      * API: v2.returns.upload_proof
+     * Support sellers to upload evidence, including text and pictures and videos converted into URLs.
      */
     public function uploadProof($return_sn, $photo, $description = '')
     {
@@ -142,6 +153,7 @@ class Returns extends Resource
 
     /**
      * API: v2.returns.query_proof
+     * Support sellers to query the evidence uploaded through the upload evidence API.
      */
     public function queryProof($return_sn)
     {
@@ -154,6 +166,7 @@ class Returns extends Resource
 
     /**
      * API: v2.returns.get_return_dispute_reason
+     * To get the dispute return reason.
      */
     public function getReturnDisputeReason($return_sn)
     {

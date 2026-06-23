@@ -17,6 +17,7 @@ class FollowPrize extends Resource
 {
     /**
      * API: v2.follow_prize.add_follow_prize
+     * OpenAPI add Follow Prize
      */
     public function addFollowPrize($data)
     {
@@ -27,6 +28,7 @@ class FollowPrize extends Resource
 
     /**
      * API: v2.follow_prize.delete_follow_prize
+     * delete_follow_prize
      */
     public function deleteFollowPrize($campaign_id)
     {
@@ -39,6 +41,7 @@ class FollowPrize extends Resource
 
     /**
      * API: v2.follow_prize.end_follow_prize
+     * end follow prize
      */
     public function endFollowPrize($campaign_id)
     {
@@ -51,6 +54,7 @@ class FollowPrize extends Resource
 
     /**
      * API: v2.follow_prize.update_follow_prize
+     * update_follow_prize
      */
     public function updateFollowPrize($data)
     {
@@ -61,6 +65,7 @@ class FollowPrize extends Resource
 
     /**
      * API: v2.follow_prize.get_follow_prize_detail
+     * get_follow_prize_detail
      */
     public function getFollowPrizeDetail($campaign_id)
     {
@@ -73,6 +78,7 @@ class FollowPrize extends Resource
 
     /**
      * API: v2.follow_prize.get_follow_prize_list
+     * OpenAPI get_follow_prize_list
      */
     public function getFollowPrizeList($params = [])
     {

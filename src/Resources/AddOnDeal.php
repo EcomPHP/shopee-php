@@ -17,6 +17,7 @@ class AddOnDeal extends Resource
 {
     /**
      * API: v2.add_on_deal.add_add_on_deal
+     * Add Add-on Deal
      */
     public function addAddOnDeal($data)
     {
@@ -27,6 +28,7 @@ class AddOnDeal extends Resource
 
     /**
      * API: v2.add_on_deal.add_add_on_deal_main_item
+     * Add Add-on Deal Main Item
      */
     public function addAddOnDealMainItem($add_on_deal_id, $main_item_list)
     {
@@ -40,6 +42,7 @@ class AddOnDeal extends Resource
 
     /**
      * API: v2.add_on_deal.add_add_on_deal_sub_item
+     * Add Add-on Deal Sub Item
      */
     public function addAddOnDealSubItem($add_on_deal_id, $sub_item_list)
     {
@@ -53,6 +56,7 @@ class AddOnDeal extends Resource
 
     /**
      * API: v2.add_on_deal.delete_add_on_deal
+     * Delete Add-on Deal
      */
     public function deleteAddOnDeal($add_on_deal_id)
     {
@@ -65,6 +69,7 @@ class AddOnDeal extends Resource
 
     /**
      * API: v2.add_on_deal.delete_add_on_deal_main_item
+     * Delete Add-on Deal Main Item
      */
     public function deleteAddOnDealMainItem($add_on_deal_id, $main_item_list)
     {
@@ -78,6 +83,7 @@ class AddOnDeal extends Resource
 
     /**
      * API: v2.add_on_deal.delete_add_on_deal_sub_item
+     * Delete Add-on Deal Sub Item
      */
     public function deleteAddOnDealSubItem($add_on_deal_id, $sub_item_list)
     {
@@ -91,6 +97,7 @@ class AddOnDeal extends Resource
 
     /**
      * API: v2.add_on_deal.get_add_on_deal_list
+     * Get Add-on Deal List
      */
     public function getAddOnDealList($params = [])
     {
@@ -105,6 +112,7 @@ class AddOnDeal extends Resource
 
     /**
      * API: v2.add_on_deal.get_add_on_deal
+     * Get Add-on Deal
      */
     public function getAddOnDeal($add_on_deal_id)
     {
@@ -117,6 +125,7 @@ class AddOnDeal extends Resource
 
     /**
      * API: v2.add_on_deal.get_add_on_deal_main_item
+     * Get Add-on Deal Main Item
      */
     public function getAddOnDealMainItem($add_on_deal_id)
     {
@@ -129,6 +138,7 @@ class AddOnDeal extends Resource
 
     /**
      * API: v2.add_on_deal.get_add_on_deal_sub_item
+     * Get Add-on Deal Sub Item
      */
     public function getAddOnDealSubItem($add_on_deal_id)
     {
@@ -141,6 +151,7 @@ class AddOnDeal extends Resource
 
     /**
      * API: v2.add_on_deal.update_add_on_deal
+     * Update Add-on Deal
      */
     public function updateAddOnDeal($add_on_deal_id, $data)
     {
@@ -153,6 +164,7 @@ class AddOnDeal extends Resource
 
     /**
      * API: v2.add_on_deal.update_add_on_deal_main_item
+     * Update Add-on Deal Main Item
      */
     public function updateAddOnDealMainItem($add_on_deal_id, $main_item_list)
     {
@@ -166,6 +178,7 @@ class AddOnDeal extends Resource
 
     /**
      * API: v2.add_on_deal.update_add_on_deal_sub_item
+     * Update Add-on Deal Sub Item
      */
     public function updateAddOnDealSubItem($add_on_deal_id, $sub_item_list)
     {
@@ -179,6 +192,7 @@ class AddOnDeal extends Resource
 
     /**
      * API: v2.add_on_deal.end_add_on_deal
+     * End Add-on Deal
      */
     public function endAddOnDeal($add_on_deal_id)
     {

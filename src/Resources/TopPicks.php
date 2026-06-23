@@ -17,6 +17,7 @@ class TopPicks extends Resource
 {
     /**
      * API: v2.top_picks.get_top_picks_list
+     * get one TopPicks
      */
     public function getTopPicksList()
     {
@@ -25,6 +26,7 @@ class TopPicks extends Resource
 
     /**
      * API: v2.top_picks.add_top_picks
+     * add one collection 
      */
     public function addTopPicks($name, $item_id_list, $is_activated = true)
     {
@@ -39,6 +41,7 @@ class TopPicks extends Resource
 
     /**
      * API: v2.top_picks.update_top_picks
+     * update a collection info
      */
     public function updateTopPicks($top_picks_id, $name = null, $item_id_list = null, $is_activated = null)
     {
@@ -54,6 +57,7 @@ class TopPicks extends Resource
 
     /**
      * API: v2.top_picks.delete_top_picks
+     * delete a collection
      */
     public function deleteTopPicks($top_picks_id)
     {

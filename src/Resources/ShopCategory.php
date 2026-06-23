@@ -17,6 +17,7 @@ class ShopCategory extends Resource
 {
     /**
      * API: v2.shop_category.add_shop_category
+     * Use this call to add a new shop collecion
      */
     public function addShopCategory($name, $sort_weight = null)
     {
@@ -30,6 +31,7 @@ class ShopCategory extends Resource
 
     /**
      * API: v2.shop_category.get_shop_category_list
+     * Use this call to get list of shop categories
      */
     public function getShopCategoryList($params = [])
     {
@@ -43,6 +45,7 @@ class ShopCategory extends Resource
 
     /**
      * API: v2.shop_category.delete_shop_category
+     * Use this call to delete a existing shop collecion
      */
     public function deleteShopCategory($shop_category_id)
     {
@@ -55,6 +58,7 @@ class ShopCategory extends Resource
 
     /**
      * API: v2.shop_category.update_shop_category
+     * Use this call to update a existing collecion
      */
     public function updateShopCategory($shop_category_id, $name = null, $sort_weight = null, $status = 'NORMAL')
     {
@@ -70,6 +74,7 @@ class ShopCategory extends Resource
 
     /**
      * API: v2.shop_category.add_item_list
+     * Use this call to add items list to certain shop_category
      */
     public function addItemList($shop_category_id, $item_id_list)
     {
@@ -83,6 +88,7 @@ class ShopCategory extends Resource
 
     /**
      * API: v2.shop_category.get_item_list
+     * Use this call to get items list of certain shop_category
      */
     public function getItemList($shop_category_id, $params = [])
     {
@@ -97,6 +103,7 @@ class ShopCategory extends Resource
 
     /**
      * API: v2.shop_category.delete_item_list
+     * Use this api to delete items from shop category
      */
     public function deleteItemList($shop_category_id, $item_id_list)
     {

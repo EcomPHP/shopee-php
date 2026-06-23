@@ -17,6 +17,7 @@ class ShopFlashSale extends Resource
 {
     /**
      * API: v2.shop_flash_sale.get_time_slot_id
+     * get time slot id
      */
     public function getTimeSlotId($start_time, $end_time)
     {
@@ -30,6 +31,7 @@ class ShopFlashSale extends Resource
 
     /**
      * API: v2.shop_flash_sale.create_shop_flash_sale
+     * creat shop flash sale
      */
     public function createShopFlashSale($timeslot_id)
     {
@@ -42,6 +44,7 @@ class ShopFlashSale extends Resource
 
     /**
      * API: v2.shop_flash_sale.get_item_criteria
+     * get shop flash sale item criteria
      */
     public function getItemCriteria()
     {
@@ -50,6 +53,7 @@ class ShopFlashSale extends Resource
 
     /**
      * API: v2.shop_flash_sale.add_shop_flash_sale_items
+     * add shop flash sale item
      */
     public function addShopFlashSaleItems($flash_sale_id, $items)
     {
@@ -63,6 +67,7 @@ class ShopFlashSale extends Resource
 
     /**
      * API: v2.shop_flash_sale.get_shop_flash_sale_list
+     * get shop flash sale list
      */
     public function getShopFlashSaleList($params = [])
     {
@@ -79,6 +84,7 @@ class ShopFlashSale extends Resource
 
     /**
      * API: v2.shop_flash_sale.get_shop_flash_sale
+     * get shop flash sale detail
      */
     public function getShopFlashSale($flash_sale_id)
     {
@@ -91,6 +97,7 @@ class ShopFlashSale extends Resource
 
     /**
      * API: v2.shop_flash_sale.get_shop_flash_sale_items
+     * get shop flash sale items and item detail
      */
     public function getShopFlashSaleItems($flash_sale_id, $offset = 0, $limit = 10)
     {
@@ -105,6 +112,7 @@ class ShopFlashSale extends Resource
 
     /**
      * API: v2.shop_flash_sale.update_shop_flash_sale
+     * edit shop flash sale(enable, disable)
      */
     public function updateShopFlashSale($flash_sale_id, $status)
     {
@@ -118,6 +126,7 @@ class ShopFlashSale extends Resource
 
     /**
      * API: v2.shop_flash_sale.update_shop_flash_sale_items
+     * edit shop flash sale item, you can only edit the models in disbaled or enabled status
      */
     public function updateShopFlashSaleItems($flash_sale_id, $items)
     {
@@ -131,6 +140,7 @@ class ShopFlashSale extends Resource
 
     /**
      * API: v2.shop_flash_sale.delete_shop_flash_sale
+     * delete shop flash sale
      */
     public function deleteShopFlashSale($flash_sale_id)
     {
@@ -143,6 +153,7 @@ class ShopFlashSale extends Resource
 
     /**
      * API: v2.shop_flash_sale.delete_shop_flash_sale_items
+     * delete shop flash sale items
      */
     public function deleteShopFlashSaleItems($flash_sale_id, $item_ids)
     {

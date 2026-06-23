@@ -17,6 +17,7 @@ class Voucher extends Resource
 {
     /**
      * API: v2.voucher.add_voucher
+     * Add voucher
      */
     public function addVoucher($data)
     {
@@ -27,6 +28,7 @@ class Voucher extends Resource
 
     /**
      * API: v2.voucher.delete_voucher
+     * Delete voucher
      */
     public function deleteVoucher($voucher_id)
     {
@@ -39,6 +41,7 @@ class Voucher extends Resource
 
     /**
      * API: v2.voucher.end_voucher
+     * End Voucher
      */
     public function endVoucher($voucher_id)
     {
@@ -51,6 +54,7 @@ class Voucher extends Resource
 
     /**
      * API: v2.voucher.get_voucher
+     * Get Voucher Detail
      */
     public function getVoucher($voucher_id)
     {
@@ -63,6 +67,7 @@ class Voucher extends Resource
 
     /**
      * API: v2.voucher.get_voucher_list
+     * Get Voucher List
      */
     public function getVoucherList($params)
     {
@@ -77,6 +82,7 @@ class Voucher extends Resource
 
     /**
      * API: v2.voucher.update_voucher
+     * Update voucher
      */
     public function updateVoucher($voucher_id, $data)
     {

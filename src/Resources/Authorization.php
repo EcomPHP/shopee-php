@@ -17,6 +17,7 @@ class Authorization extends Resource
 {
     /**
      * API: v2.public.get_shops_by_partner
+     * get basic info of shops which have authorized to the partner.
      */
     public function getShopsByPartner($params = [])
     {
@@ -30,6 +31,7 @@ class Authorization extends Resource
 
     /**
      * API: v2.public.get_merchants_by_partner
+     * Use this API to get basic info of merchants which have authorized to the partner.
      */
     public function getMerchantsByPartner($params = [])
     {
@@ -43,6 +45,7 @@ class Authorization extends Resource
 
     /**
      * API: v2.public.get_access_token
+     * Use the code from the authorization step to call this API to obtain the authorized shop_id, merchant_id, supplier_id, or user_id, and its corresponding access_token and refresh_token.
      */
     public function getToken($code, $shop_id, $partner_id)
     {
@@ -57,6 +60,7 @@ class Authorization extends Resource
 
     /**
      * API: v2.public.refresh_access_token
+     * Use this API to refresh the access_token after it expires. Refresh_token can be used once only, this API will also return a new refresh_token. Please use the new refresh_token for the next RefreshAccessToken call
      */
     public function refreshNewToken($refresh_token, $shop_id, $partner_id)
     {
@@ -71,6 +75,7 @@ class Authorization extends Resource
 
     /**
      * API: v2.public.get_token_by_resend_code
+     * Use the resend code to get access token and refresh token. When you lost your access token or refresh token, you can go to authorization management page to resend code by yourselves. You can only use this endpoint in live environment, we don't support in test-stable environment.
      */
     public function getTokenByResendCode($resend_code)
     {
@@ -96,6 +101,7 @@ class Authorization extends Resource
 
     /**
      * API: v2.public.get_shopee_ip_ranges
+     * You can get shopee ip address ranges through this open api.
      */
     public function getShopeeIpRanges()
     {

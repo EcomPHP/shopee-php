@@ -17,6 +17,7 @@ class BundleDeal extends Resource
 {
     /**
      * API: v2.bundle_deal.add_bundle_deal
+     * create bundle deal. Relevant restrictions refer to FAQ：https://open.shopee.com/faq/254
      */
     public function addBundleDeal($data)
     {
@@ -27,6 +28,7 @@ class BundleDeal extends Resource
 
     /**
      * API: v2.bundle_deal.add_bundle_deal_item
+     * add product to bundle deal
      */
     public function addBundleDealItem($bundle_deal_id, $item_list)
     {
@@ -40,6 +42,7 @@ class BundleDeal extends Resource
 
     /**
      * API: v2.bundle_deal.get_bundle_deal_list
+     * get bundle deal list
      */
     public function getBundleDealList($params = [])
     {
@@ -54,6 +57,7 @@ class BundleDeal extends Resource
 
     /**
      * API: v2.bundle_deal.get_bundle_deal
+     * get bundle deal detail
      */
     public function getBundleDeal($bundle_deal_id)
     {
@@ -66,6 +70,7 @@ class BundleDeal extends Resource
 
     /**
      * API: v2.bundle_deal.get_bundle_deal_item
+     * get bundle deal item
      */
     public function getBundleDealItem($bundle_deal_id)
     {
@@ -78,6 +83,7 @@ class BundleDeal extends Resource
 
     /**
      * API: v2.bundle_deal.update_bundle_deal
+     * update bundle deal. Relevant restrictions refer to FAQ：https://open.shopee.com/faq/254
      */
     public function updateBundleDeal($bundle_deal_id, $data)
     {
@@ -90,6 +96,7 @@ class BundleDeal extends Resource
 
     /**
      * API: v2.bundle_deal.update_bundle_deal_item
+     * update product in bundle deal
      */
     public function updateBundleDealItem($bundle_deal_id, $item_list)
     {
@@ -103,6 +110,7 @@ class BundleDeal extends Resource
 
     /**
      * API: v2.bundle_deal.end_bundle_deal
+     * end bundle deal
      */
     public function endBundleDeal($bundle_deal_id)
     {
@@ -115,6 +123,7 @@ class BundleDeal extends Resource
 
     /**
      * API: v2.bundle_deal.delete_bundle_deal
+     * delete bundle deal
      */
     public function deleteBundleDeal($bundle_deal_id)
     {
@@ -127,6 +136,7 @@ class BundleDeal extends Resource
 
     /**
      * API: v2.bundle_deal.delete_bundle_deal_item
+     * delete product in bundle deal
      */
     public function deleteBundleDealItem($bundle_deal_id, $item_list)
     {

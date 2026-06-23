@@ -17,6 +17,7 @@ class AccountHealth extends Resource
 {
     /**
      * API: v2.account_health.get_shop_performance
+     * The data metrics of shop performance.
      */
     public function getShopPerformance()
     {
@@ -35,6 +36,7 @@ class AccountHealth extends Resource
 
     /**
      * API: v2.account_health.get_metric_source_detail
+     * Get the Affected Orders / Relevant Listings / Relevant Violations details of metrics.
      */
     public function getMetricSourceDetail($metric_id, $page_no = 1, $page_size = 100)
     {
@@ -49,6 +51,7 @@ class AccountHealth extends Resource
 
     /**
      * API: v2.account_health.get_penalty_point_history
+     * Get the penalty point records generated in the current quarter.
      */
     public function getPenaltyPointHistory($violation_type = null, $page_no = 1, $page_size = 100)
     {
@@ -63,6 +66,7 @@ class AccountHealth extends Resource
 
     /**
      * API: v2.account_health.get_punishment_history
+     * Get the punishment records generated in the current quarter.
      */
     public function getPunishmentHistory($punishment_status, $page_no = 1, $page_size = 100)
     {
@@ -77,6 +81,7 @@ class AccountHealth extends Resource
 
     /**
      * API: v2.account_health.get_listings_with_issues
+     * Get the Problematic Listings to improve the listings to avoid incurring penalty points.
      */
     public function getListingsWithIssues($page_no = 1, $page_size = 100)
     {
@@ -90,6 +95,7 @@ class AccountHealth extends Resource
 
     /**
      * API: v2.account_health.get_late_orders
+     * Get the Late Orders to take action to avoid order cancellation and penalty points.
      */
     public function getLateOrders($page_no = 1, $page_size = 100)
     {

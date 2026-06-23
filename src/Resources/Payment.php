@@ -202,6 +202,7 @@ class Payment extends Resource
 
     /**
      * API: v2.payment.get_payout_info
+     * This is a new API which applicable for Cross Border (CB) sellers only to get the shop's payout data, will be used for the original API v2.get_payout_details replacement, we provide data such as the payout amount, currency, FX rate, the payout's associated order income and adjustment records etc.
      */
     public function getPayoutInfo($params = [])
     {
@@ -212,6 +213,7 @@ class Payment extends Resource
 
     /**
      * API: v2.payment.get_billing_transaction_info
+     * This API is applicable for Cross Border (CB) sellers only to get the detailed payout transaction data, both released and to-be released transaction can be found in here
      */
     public function getBillingTransactionInfo($params = [])
     {
