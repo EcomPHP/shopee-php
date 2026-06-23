@@ -1,6 +1,6 @@
 {
   "name": "ecomphp/shopee-php",
-  "description": "Unofficial Shopee API Client in PHP",
+  "description": "A powerful, lightweight, and developer-friendly Shopee API PHP SDK designed to integrate Shopee Open Platform v2 into vanilla PHP applications, Laravel, or Symfony projects.",
   "type": "library",
   "bin": [
     "bin/shopee-mcp-server",
@@ -9,8 +9,8 @@
   "license": "Apache-2.0",
   "authors": [
     {
-      "name": "J",
-      "email": "j@sax.vn"
+      "name": "nVuln",
+      "role": "Developer"
     }
   ],
   "require": {
