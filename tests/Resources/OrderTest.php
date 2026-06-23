@@ -146,6 +146,54 @@ class OrderTest extends TestCase
         $this->assertEquals($expectedResponse, $result);
     }
 
+    public function testGetPackageDetail()
+    {
+        $packageNumberList = ['PKG-1', 'PKG-2'];
+        $params = ['response_optional_fields' => 'item_list'];
+        $expectedParams = [
+            'package_number_list' => 'PKG-1,PKG-2',
+            'response_optional_fields' => 'item_list'
+        ];
+        $expectedResponse = ['package_list' => []];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'GET',
+                'order/get_package_detail',
+                [
+                    RequestOptions::QUERY => $expectedParams
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->order->getPackageDetail($packageNumberList, $params);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testGetPackageDetailWithSinglePackageNumber()
+    {
+        $packageNumber = 'PKG-1';
+        $expectedParams = ['package_number_list' => 'PKG-1'];
+        $expectedResponse = ['package_list' => []];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'GET',
+                'order/get_package_detail',
+                [
+                    RequestOptions::QUERY => $expectedParams
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->order->getPackageDetail($packageNumber);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
     public function testGetBookingList()
     {
         $params = [

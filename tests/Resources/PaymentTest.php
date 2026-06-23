@@ -49,6 +49,29 @@ class PaymentTest extends TestCase
         $this->assertEquals($expectedResponse, $result);
     }
 
+    public function testGetEscrowDetailBatch()
+    {
+        $orderSnList = ['123456789', '987654321'];
+        $expectedResponse = ['escrow_detail_list' => []];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'GET',
+                'payment/get_escrow_detail_batch',
+                [
+                    RequestOptions::QUERY => [
+                        'order_sn_list' => '123456789,987654321'
+                    ]
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->payment->getEscrowDetailBatch($orderSnList);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
     public function testSetShopInstallmentStatus()
     {
         $installmentStatus = 1;

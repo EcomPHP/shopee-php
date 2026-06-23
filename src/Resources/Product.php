@@ -277,4 +277,59 @@ class Product extends Resource
             RequestOptions::JSON => $params,
         ]);
     }
+
+    /**
+     * API: v2.product.batch_add_item
+     * Create asynchronous task to batch add items.
+     */
+    public function batchAddItem($params)
+    {
+        return $this->call('POST', 'product/batch_add_item', [
+            RequestOptions::JSON => $params,
+        ]);
+    }
+
+    /**
+     * API: v2.product.batch_update_outlet_price
+     * Create asynchronous task to batch update outlet item prices.
+     */
+    public function batchUpdateOutletPrice($params)
+    {
+        return $this->call('POST', 'product/batch_update_outlet_price', [
+            RequestOptions::JSON => $params,
+        ]);
+    }
+
+    /**
+     * API: v2.product.batch_update_outlet_stock
+     * Create asynchronous task to batch update outlet item stock.
+     */
+    public function batchUpdateOutletStock($params)
+    {
+        return $this->call('POST', 'product/batch_update_outlet_stock', [
+            RequestOptions::JSON => $params,
+        ]);
+    }
+
+    /**
+     * API: v2.product.batch_publish_item_to_outlet_shop
+     * Create asynchronous task to batch publish outlet items.
+     */
+    public function batchPublishItemToOutletShop($params)
+    {
+        return $this->call('POST', 'product/batch_publish_item_to_outlet_shop', [
+            RequestOptions::JSON => $params,
+        ]);
+    }
+
+    /**
+     * API: v2.product.get_batch_task_result
+     * Query processing result of batch asynchronous tasks.
+     */
+    public function getBatchTaskResult($params = [])
+    {
+        return $this->call('GET', 'product/get_batch_task_result', [
+            RequestOptions::QUERY => $params,
+        ]);
+    }
 }

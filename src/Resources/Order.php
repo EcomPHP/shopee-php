@@ -73,6 +73,23 @@ class Order extends Resource
     }
 
     /**
+     * API: v2.order.get_package_detail
+     * Use this api to get package detail.
+     */
+    public function getPackageDetail($package_number_list, $params = [])
+    {
+        if (is_array($package_number_list)) {
+            $package_number_list = implode(',', $package_number_list);
+        }
+
+        $params['package_number_list'] = $package_number_list;
+
+        return $this->call('GET', 'order/get_package_detail', [
+            RequestOptions::QUERY => $params,
+        ]);
+    }
+
+    /**
      * API: v2.order.get_booking_list
      * Use this api to search bookings.
      *

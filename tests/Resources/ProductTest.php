@@ -529,4 +529,125 @@ class ProductTest extends TestCase
         
         $this->assertEquals($expectedResponse, $result);
     }
+
+    public function testBatchAddItem()
+    {
+        $params = [
+            'item_list' => [
+                ['item_name' => 'Batch Item A']
+            ]
+        ];
+        $expectedResponse = ['task_id' => 101];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'POST',
+                'product/batch_add_item',
+                [
+                    RequestOptions::JSON => $params
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->product->batchAddItem($params);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testBatchUpdateOutletPrice()
+    {
+        $params = [
+            'item_list' => [
+                ['item_id' => 12345, 'price_info' => ['price' => 100000]]
+            ]
+        ];
+        $expectedResponse = ['task_id' => 102];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'POST',
+                'product/batch_update_outlet_price',
+                [
+                    RequestOptions::JSON => $params
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->product->batchUpdateOutletPrice($params);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testBatchUpdateOutletStock()
+    {
+        $params = [
+            'item_list' => [
+                ['item_id' => 12345, 'stock_info' => ['normal_stock' => 10]]
+            ]
+        ];
+        $expectedResponse = ['task_id' => 103];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'POST',
+                'product/batch_update_outlet_stock',
+                [
+                    RequestOptions::JSON => $params
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->product->batchUpdateOutletStock($params);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testBatchPublishItemToOutletShop()
+    {
+        $params = [
+            'item_id_list' => [12345, 23456]
+        ];
+        $expectedResponse = ['task_id' => 104];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'POST',
+                'product/batch_publish_item_to_outlet_shop',
+                [
+                    RequestOptions::JSON => $params
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->product->batchPublishItemToOutletShop($params);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
+
+    public function testGetBatchTaskResult()
+    {
+        $params = [
+            'task_id' => 105
+        ];
+        $expectedResponse = ['status' => 'SUCCESS'];
+
+        $this->client->expects($this->once())
+            ->method('call')
+            ->with(
+                'GET',
+                'product/get_batch_task_result',
+                [
+                    RequestOptions::QUERY => $params
+                ]
+            )
+            ->willReturn($expectedResponse);
+
+        $result = $this->product->getBatchTaskResult($params);
+
+        $this->assertEquals($expectedResponse, $result);
+    }
 }

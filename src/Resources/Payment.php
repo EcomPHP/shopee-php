@@ -32,6 +32,23 @@ class Payment extends Resource
     }
 
     /**
+     * API: v2.payment.get_escrow_detail_batch
+     * Use this API to fetch the accounting detail of orders in batch.
+     */
+    public function getEscrowDetailBatch($order_sn_list)
+    {
+        if (is_array($order_sn_list)) {
+            $order_sn_list = implode(',', $order_sn_list);
+        }
+
+        return $this->call('GET', 'payment/get_escrow_detail_batch', [
+            RequestOptions::QUERY => [
+                'order_sn_list' => $order_sn_list,
+            ],
+        ]);
+    }
+
+    /**
      * API: v2.payment.set_shop_installment_status
      * Sets the staging capability of shop level.
      *
