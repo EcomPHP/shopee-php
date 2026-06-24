@@ -6,7 +6,6 @@ const SHOPEE_API_URL = 'https://open.shopee.com/opservice/api/v1';
 
 // get shopee openapi updates list
 $shopee_openapi_updates = curl_get(SHOPEE_API_URL.'/content/list?SPC_CDS_VER=2&category_id=55&page_size=10&page_index=1');
-$shopee_openapi_updates = json_decode($shopee_openapi_updates, true);
 
 // latest announcement
 $latest_announcement = $shopee_openapi_updates['data'][0] ?? null;
@@ -34,7 +33,6 @@ if (isset($searchResult['total_count']) && $searchResult['total_count'] > 0) {
 
 // get announcement content
 $latest_announcement_data = curl_get(SHOPEE_API_URL.'/content/detail?SPC_CDS_VER=2&id='.$latest_announcement['id']);
-$latest_announcement_data = json_decode($latest_announcement_data, true);
 
 // announcement content
 $blocks = json_decode($latest_announcement_data['detail'], true);
@@ -48,10 +46,29 @@ $issue_body = <<<MARKDOWN
 {$markdownOutput}
 
 ---
-@junie-agent Please check the changes for this endpoint in Shopee's Openapi Announcement, update the corresponding PHP source code in the repo, and create a new Pull Request for review.
+@junie-agent Please review the API changes described above. Focus **ONLY** on major updates such as adding new endpoints or removing/taking legacy APIs offline. You can safely ignore any other changes regarding request/response parameters or fields. Update the PHP code and create a new PR for review.
 MARKDOWN;
 
-echo $markdownOutput;exit;
+// temporary save issue body to file
+file_put_contents(__DIR__ . '/issue_body.md', $issue_body);
+
+// run gh issue create command, add label "shopee-announcement" to filter issues
+$command = sprintf(
+    'gh issue create --repo %s --title %s --body-file %s --label "shopee-announcement"',
+    escapeshellarg($repo),
+    escapeshellarg($issue_title),
+    escapeshellarg(__DIR__ . '/issue_body.md')
+);
+
+exec($command, $output, $returnVar);
+if ($returnVar !== 0) {
+    echo "Failed to create issue: " . implode("\n", $output) . "\n";
+    exit(1);
+}
+
+unlink(__DIR__ . '/issue_body.md');
+echo "Issue created successfully.\n";
+echo $markdownOutput;
 
 function curl_get($url, $github_token = null)
 {

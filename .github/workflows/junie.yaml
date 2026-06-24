@@ -33,3 +33,5 @@ jobs:
         uses: JetBrains/junie-github-action@v0
         with:
           junie_api_key: ${{ secrets.JUNIE_API_KEY }}
+          allowed_mcp_servers: "shopee,mcp_github_checks_server,mcp_github_inline_comment_server"
+          model: "gpt-codex"
