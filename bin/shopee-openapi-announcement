@@ -6,7 +6,6 @@ const SHOPEE_API_URL = 'https://open.shopee.com/opservice/api/v1';
 
 // get shopee openapi updates list
 $shopee_openapi_updates = curl_get(SHOPEE_API_URL.'/content/list?SPC_CDS_VER=2&category_id=55&page_size=10&page_index=1');
-$shopee_openapi_updates = json_decode($shopee_openapi_updates, true);
 
 // latest announcement
 $latest_announcement = $shopee_openapi_updates['data'][0] ?? null;
@@ -34,7 +33,6 @@ if (isset($searchResult['total_count']) && $searchResult['total_count'] > 0) {
 
 // get announcement content
 $latest_announcement_data = curl_get(SHOPEE_API_URL.'/content/detail?SPC_CDS_VER=2&id='.$latest_announcement['id']);
-$latest_announcement_data = json_decode($latest_announcement_data, true);
 
 // announcement content
 $blocks = json_decode($latest_announcement_data['detail'], true);
