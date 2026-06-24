@@ -1,0 +1,36 @@
+name: Check Shopee API Updates
+
+# Configure scheduled and manual workflow runs
+on:
+  schedule:
+    - cron: '0 0 * * *' # Runs automatically at 00:00 UTC every day (around 07:00 Vietnam time)
+  workflow_dispatch:     # Allows manually clicking the "Run workflow" button in the GitHub UI for testing anytime
+
+# PERMISSIONS: Required so GITHUB_TOKEN can create issues successfully
+permissions:
+  issues: write
+  contents: write
+
+jobs:
+  check-and-notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Pull source code from the repository to the GitHub Runner VM
+      - name: Checkout repository code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up the PHP environment (choose a version compatible with your library)
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: json, curl # Ensure curl and json extensions are enabled for the script
+
+      # Step 3: Run the Shopee scraping script, convert HTML to English Markdown, and filter language duplicates
+      # Check duplicates via API and create an issue using GitHub CLI (gh)
+      - name: Process Shopee Announcement and Create GitHub Issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Required variable for automatic authentication in gh CLI and GitHub API
+          REPOSITORY_NAME: ${{ github.repository }}
+        run: php bin/shopee-openapi-announcement

@@ -4,7 +4,8 @@
   "type": "library",
   "bin": [
     "bin/shopee-mcp-server",
-    "bin/shopee-mcp-install"
+    "bin/shopee-mcp-install",
+    "bin/shopee-openapi-announcement"
   ],
   "license": "Apache-2.0",
   "authors": [

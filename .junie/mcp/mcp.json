@@ -1,0 +1,10 @@
+{
+    "mcpServers": {
+        "shopee": {
+            "command": "php",
+            "args": [
+                "bin/shopee-mcp-server"
+            ]
+        }
+    }
+}

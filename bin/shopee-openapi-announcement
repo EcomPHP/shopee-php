@@ -1,0 +1,185 @@
+#!/usr/bin/env php
+<?php
+declare(strict_types=1);
+
+const SHOPEE_API_URL = 'https://open.shopee.com/opservice/api/v1';
+
+// get shopee openapi updates list
+$shopee_openapi_updates = curl_get(SHOPEE_API_URL.'/content/list?SPC_CDS_VER=2&category_id=55&page_size=10&page_index=1');
+$shopee_openapi_updates = json_decode($shopee_openapi_updates, true);
+
+// latest announcement
+$latest_announcement = $shopee_openapi_updates['data'][0] ?? null;
+
+if (!$latest_announcement) {
+    die("No announcement found.");
+}
+
+$announcement_id = $latest_announcement['id'];
+$announcement_title = $latest_announcement['title'];
+$repo = getenv('GITHUB_REPOSITORY');
+$unique_flag = "[Shopee-ID:{$announcement_id}]";
+
+echo "Checking Issue for announcement ID: {$announcement_id}\n\n";
+$search_query = urlencode("\"{$unique_flag}\" repo:{$repo} is:issue");
+$api_url = "https://api.github.com/search/issues?q={$search_query}";
+
+$search_result = curl_get($api_url, getenv('GITHUB_TOKEN'));
+
+// checking if issue already exists
+if (isset($searchResult['total_count']) && $searchResult['total_count'] > 0) {
+    echo "Issue already exists for announcement ID: {$announcement_id}\n\n";
+    exit;
+}
+
+// get announcement content
+$latest_announcement_data = curl_get(SHOPEE_API_URL.'/content/detail?SPC_CDS_VER=2&id='.$latest_announcement['id']);
+$latest_announcement_data = json_decode($latest_announcement_data, true);
+
+// announcement content
+$blocks = json_decode($latest_announcement_data['detail'], true);
+$markdownOutput = convertShopeeJsonToEnglishMarkdown($blocks);
+
+echo "No Issue found. Creating new Issue for announcement ID: {$announcement_id}\n\n";
+$issue_title = "{$announcement_title} {$unique_flag}";
+$issue_body = <<<MARKDOWN
+## New Shopee's Openapi Announcement (ID: {$announcement_id})
+
+{$markdownOutput}
+
+---
+@junie-agent Please check the changes for this endpoint in Shopee's Openapi Announcement, update the corresponding PHP source code in the repo, and create a new Pull Request for review.
+MARKDOWN;
+
+echo $markdownOutput;exit;
+
+function curl_get($url, $github_token = null)
+{
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'Shopee-Automation-Script');
+
+    if ($github_token) {
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer {$github_token}"]);
+    }
+
+    $output = curl_exec($ch);
+    curl_close($ch);
+
+    return json_decode($output, true);
+}
+
+function parseHtmlTableToMarkdown(string $htmlTable): string
+{
+    // Extract all table rows.
+    if (!preg_match_all('/<tr[^>]*>(.*?)<\/tr>/is', $htmlTable, $rows)) {
+        return '';
+    }
+
+    $markdownRows = [];
+    $isHeader = true;
+    $lineBreaks = ['<br />', '<br>', "\n", "\r"];
+
+    foreach ($rows[1] as $rowHtml) {
+        // Extract all th/td cells from the current row.
+        if (!preg_match_all('/<(th|td)[^>]*>(.*?)<\/\1>/is', $rowHtml, $cells)) {
+            continue;
+        }
+
+        $cleanCells = [];
+        foreach ($cells[2] as $cell) {
+            // Remove nested tags, normalize whitespace and keep <code> tags.
+            $cell = strip_tags($cell, '<code>');
+            $cell = str_replace($lineBreaks, ' ', $cell);
+            $cleanCells[] = trim((string) preg_replace('/\s+/', ' ', $cell));
+        }
+
+        if ($cleanCells === []) {
+            continue;
+        }
+
+        $markdownRows[] = '| ' . implode(' | ', $cleanCells) . ' |';
+
+        // For the first row (header), append markdown separator.
+        if ($isHeader) {
+            $alignments = array_fill(0, count($cleanCells), '---');
+            $markdownRows[] = '| ' . implode(' | ', $alignments) . ' |';
+            $isHeader = false;
+        }
+    }
+
+    return implode("\n", $markdownRows) . "\n";
+}
+
+/**
+ * Convert Shopee JSON blocks into English markdown.
+ */
+function convertShopeeJsonToEnglishMarkdown(array $blocks): string
+{
+    $markdown = "";
+    $containsChinesePattern = '/[\x{4e00}-\x{9fa5}]+/u';
+
+    foreach ($blocks as $block) {
+        $type = $block['type'] ?? '';
+        $html = $block['html'] ?? '';
+
+        // --- LANGUAGE FILTERING STEP ---
+        // Stop once Chinese translation blocks start, to keep only English content.
+        if (strpos($html, '尊敬的开发者') || preg_match($containsChinesePattern, $html) === 1) {
+            break;
+        }
+
+        // --- HTML TO MARKDOWN CONVERSION ---
+        switch ($type) {
+            case 'heading':
+                // Convert heading tags to markdown heading syntax.
+                $cleanText = strip_tags($html);
+                $markdown .= "## " . trim($cleanText) . "\n\n";
+                break;
+
+            case 'table':
+                $markdown .= parseHtmlTableToMarkdown($html) . "\n";
+                break;
+
+            case 'text':
+                // Handle ordered lists (<ol><li>).
+                if (strpos($html, '<ol>')) {
+                    preg_match_all('/<li>(.*?)<\/li>/is', $html, $lis);
+                    foreach ($lis[1] as $index => $li) {
+                        $cleanLi = strip_tags($li, '<a><code>');
+                        // Convert <a> tags to markdown links.
+                        $cleanLi = preg_replace('/<a href="([^"]+)">([^<]+)<\/a>/i', '[$2]($1)', $cleanLi);
+                        $markdown .= ($index + 1) . ". " . trim($cleanLi) . "\n";
+                    }
+                    $markdown .= "\n";
+                } else {
+                    // Handle normal text paragraphs and break lines.
+                    $html = str_replace(['<br />', '<br>'], "\n", $html);
+
+                    // Convert inline <a> links.
+                    $html = preg_replace('/<a href="([^"]+)"[^>]*>([^<]+)<\/a>/i', '[$2]($1)', $html);
+
+                    // Convert bold/italic tags to markdown markers, keep <code>.
+                    $html = preg_replace('/<\/?b[^>]*>/i', '**', $html);
+                    $html = preg_replace('/<\/?i[^>]*>/i', '*', $html);
+
+                    // Remove remaining HTML tags except <code>.
+                    $cleanText = strip_tags($html, '<code>');
+
+                    // Normalize HTML entities (for example, &amp; to &).
+                    $cleanText = html_entity_decode($cleanText);
+
+                    if (trim($cleanText) !== '') {
+                        $markdown .= trim($cleanText) . "\n\n";
+                    }
+                }
+                break;
+        }
+    }
+
+    // Remove excessive blank lines.
+    return trim(preg_replace("/\n{3,}/", "\n\n", $markdown));
+}
+
+?>
