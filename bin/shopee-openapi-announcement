@@ -49,7 +49,26 @@ $issue_body = <<<MARKDOWN
 @junie-agent Please check the changes for this endpoint in Shopee's Openapi Announcement, update the corresponding PHP source code in the repo, and create a new Pull Request for review.
 MARKDOWN;
 
-echo $markdownOutput;exit;
+// temporary save issue body to file
+file_put_contents(__DIR__ . '/issue_body.md', $issue_body);
+
+// run gh issue create command, add label "shopee-announcement" to filter issues
+$command = sprintf(
+    'gh issue create --repo %s --title %s --body-file %s --label "shopee-announcement"',
+    escapeshellarg($repo),
+    escapeshellarg($issue_title),
+    escapeshellarg(__DIR__ . '/issue_body.md')
+);
+
+exec($command, $output, $returnVar);
+if ($returnVar !== 0) {
+    echo "Failed to create issue: " . implode("\n", $output) . "\n";
+    exit(1);
+}
+
+unlink(__DIR__ . '/issue_body.md');
+echo "Issue created successfully.\n";
+echo $markdownOutput;
 
 function curl_get($url, $github_token = null)
 {
