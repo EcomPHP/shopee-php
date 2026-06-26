@@ -32,5 +32,5 @@ jobs:
       - name: Process Shopee Announcement and Create GitHub Issue
         env:
           GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # use PERSONAL_ACCESS_TOKEN for automated triggering next workflow
-          REPOSITORY_NAME: ${{ github.repository }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         run: php .github/scripts/shopee-openapi-announcement
