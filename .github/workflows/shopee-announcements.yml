@@ -31,6 +31,7 @@ jobs:
       # Check duplicates via API and create an issue using GitHub CLI (gh)
       - name: Process Shopee Announcement and Create GitHub Issue
         env:
-          GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # use PERSONAL_ACCESS_TOKEN for automated triggering next workflow
+          # GH_TOKEN: ${{ secrets.PERSONAL_ACCESS_TOKEN }} # use PERSONAL_ACCESS_TOKEN for automated triggering next workflow
           GITHUB_REPOSITORY: ${{ github.repository }}
-        run: php .github/scripts/shopee-openapi-announcement
+        run: |
+          php .github/scripts/shopee-openapi-announcement "$GITHUB_REPOSITORY"

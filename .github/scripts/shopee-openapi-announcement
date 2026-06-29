@@ -2,6 +2,12 @@
 <?php
 declare(strict_types=1);
 
+$repo = $argv[1] ?? null;
+if (!$repo) {
+    echo "Please provide a repository name.\n";
+    exit(1);
+}
+
 const SHOPEE_API_URL = 'https://open.shopee.com/opservice/api/v1';
 
 // get shopee openapi updates list
@@ -16,19 +22,22 @@ if (!$latest_announcement) {
 
 $announcement_id = $latest_announcement['id'];
 $announcement_title = $latest_announcement['title'];
-$repo = getenv('GITHUB_REPOSITORY');
+
 $unique_flag = "[Shopee-ID:{$announcement_id}]";
 
 echo "Checking Issue for announcement ID: {$announcement_id}\n\n";
-$search_query = urlencode("\"{$unique_flag}\" repo:{$repo} is:issue");
-$api_url = "https://api.github.com/search/issues?q={$search_query}";
+// search issues command
+$command = sprintf('gh issue list --repo %s --search "repo:'.$repo.' is:issue %s"', escapeshellarg($repo), escapeshellarg($unique_flag));
+exec($command, $output, $returnVar);
 
-$search_result = curl_get($api_url, getenv('GITHUB_TOKEN'));
+if ($returnVar !== 0) {
+    echo "Failed to execute command: " . implode("\n", $output) . "\n";
+    exit(1);
+}
 
-// checking if issue already exists
-if (isset($searchResult['total_count']) && $searchResult['total_count'] > 0) {
+if (count($output) > 0) {
     echo "Issue already exists for announcement ID: {$announcement_id}\n\n";
-    exit;
+    exit(1);
 }
 
 // get announcement content
@@ -70,16 +79,12 @@ unlink(__DIR__ . '/issue_body.md');
 echo "Issue created successfully.\n";
 echo $markdownOutput;
 
-function curl_get($url, $github_token = null)
+function curl_get($url)
 {
     $ch = curl_init();
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
     curl_setopt($ch, CURLOPT_USERAGENT, 'Shopee-Automation-Script');
-
-    if ($github_token) {
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ["Authorization: Bearer {$github_token}"]);
-    }
 
     $output = curl_exec($ch);
     curl_close($ch);
