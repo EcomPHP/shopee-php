@@ -14,7 +14,7 @@ class Server
     private $projectRoot;
 
     /**
-     * @var array<int, array<string, string>>|null
+     * @var array<int, array<string, mixed>>|null
      */
     private $documentIndex;
 
@@ -34,13 +34,13 @@ class Server
         return [
             [
                 'name' => 'search_documents',
-                'description' => 'Search Shopee API SDK and docs references by keyword.',
+                'description' => 'Search Shopee API SDK and docs references by keyword including parameters and error specifications.',
                 'inputSchema' => [
                     'type' => 'object',
                     'properties' => [
                         'query' => [
                             'type' => 'string',
-                            'description' => 'Keyword to search in local SDK docs index.',
+                            'description' => 'Keyword or exact API name (e.g., v2.ams.batch_add_products_to_open_campaign) to search.',
                         ],
                     ],
                     'required' => ['query'],
@@ -125,7 +125,6 @@ class Server
         }
 
         $client = new Client($partnerId, $partnerKey);
-
         if (getenv('SHOPEE_DEBUG_MODE')) {
             $client->useDebugMode();
         }
@@ -155,7 +154,6 @@ class Server
 
         $client = $this->buildClient();
         $url = $client->auth()->createAuthRequest($redirectUri, true);
-
         return [
             'auth_url' => $url,
         ];
@@ -175,7 +173,6 @@ class Server
     {
         $shopId = isset($arguments['shop_id']) ? $arguments['shop_id'] : getenv('SHOPEE_SHOP_ID');
         $accessToken = isset($arguments['access_token']) ? $arguments['access_token'] : getenv('SHOPEE_ACCESS_TOKEN');
-
         if (!$shopId || !$accessToken) {
             throw new \InvalidArgumentException('shop_id and access_token are required (arguments or env variables).');
         }
@@ -191,7 +188,7 @@ class Server
         return $client->Order->getOrderList($params);
     }
 
-    private function searchDocuments(array $arguments)
+    public function searchDocuments(array $arguments)
     {
         if (empty($arguments['query'])) {
             throw new \InvalidArgumentException('query is required.');
@@ -219,7 +216,7 @@ class Server
 
         if ($isApiName) {
             $officialDocument = $this->fetchOfficialDocument($arguments['query']);
-            $result['results'] = $this->applyOfficialDefineDescription($result['results'], $officialDocument);
+            $result['results'] = $this->enrichWithOfficialMetadata($result['results'], $officialDocument);
         }
 
         $result['resources'] = $this->collectResources($result['results']);
@@ -227,10 +224,6 @@ class Server
         return $result;
     }
 
-    /**
-     * @param array<int, array<string, string>> $results
-     * @return array<int, string>
-     */
     private function collectResources(array $results)
     {
         $resources = [];
@@ -246,49 +239,70 @@ class Server
     }
 
     /**
-     * @param array<int, array<string, string>> $results
-     * @param array<string, mixed> $officialDocument
-     * @return array<int, array<string, string>>
+     * Add detailed metadata (params, errors, samples) to support AI agent code generation
      */
-    private function applyOfficialDefineDescription(array $results, array $officialDocument)
+    private function enrichWithOfficialMetadata(array $results, array $officialDocument)
     {
         if (!isset($officialDocument['data']) || !is_array($officialDocument['data'])) {
             return $results;
         }
 
-        if (!isset($officialDocument['data']['define']) || !is_string($officialDocument['data']['define'])) {
-            return $results;
+        $data = $officialDocument['data'];
+
+        // Extract the detailed technical specification structure
+        $meta = [
+            'api_id' => isset($data['api_id']) ? $data['api_id'] : null,
+            'api_name' => isset($data['api_name']) ? $data['api_name'] : null,
+            'description' => isset($data['define']) ? $data['define'] : '',
+            'module_name' => isset($data['module_name']) ? $data['module_name'] : null,
+            'request_params' => [],
+            'response_params' => [],
+            'error_specifications' => isset($data['error_list']) ? $data['error_list'] : [],
+            'global_errors' => isset($data['common_error_list']) ? $data['common_error_list'] : [],
+            'samples' => []
+        ];
+
+        // Decode nested JSON strings in the 'params' field
+        if (isset($data['params']) && is_string($data['params'])) {
+            $parsedParams = json_decode($data['params'], true);
+            if (is_array($parsedParams)) {
+                $meta['request_params'] = isset($parsedParams['request_params']) ? $parsedParams['request_params'] : [];
+                $meta['response_params'] = isset($parsedParams['response_params']) ? $parsedParams['response_params'] : [];
+            }
         }
 
-        $define = $officialDocument['data']['define'];
-        if ($define === '') {
-            return $results;
+        // Restore JSON payload example samples
+        foreach (['request_sample', 'response_sample', 'error_example'] as $sampleKey) {
+            if (isset($data[$sampleKey]) && is_string($data[$sampleKey])) {
+                $samplesArray = json_decode($data[$sampleKey], true);
+                if (is_array($samplesArray)) {
+                    foreach ($samplesArray as $sampleItem) {
+                        if (isset($sampleItem['type']) && $sampleItem['type'] === 'JSON') {
+                            $meta['samples'][$sampleKey] = json_decode($sampleItem['value'], true) ?: $sampleItem['value'];
+                        } elseif (isset($sampleItem['type']) && $sampleItem['type'] === 'Payload') {
+                            $meta['samples'][$sampleKey] = json_decode($sampleItem['value'], true) ?: $sampleItem['value'];
+                        }
+                    }
+                }
+            }
         }
 
+        // Update metadata into local document index match results
         foreach ($results as $index => $item) {
-            $results[$index]['description'] = $define;
+            $results[$index] = array_merge($item, $meta);
         }
 
         return $results;
     }
 
-    /**
-     * @param string $query
-     * @return bool
-     */
     private function isApiName($query)
     {
         return preg_match('/^v2\.[a-z0-9_\.]+$/i', trim($query)) === 1;
     }
 
-    /**
-     * @param string $apiName
-     * @return array<string, mixed>
-     */
     private function fetchOfficialDocument($apiName)
     {
         $url = $this->buildApiUrl($apiName);
-
         try {
             if ($this->documentFetcher !== null) {
                 $fetched = call_user_func($this->documentFetcher, $url, $apiName);
@@ -302,17 +316,23 @@ class Server
             $client = new GuzzleHttpClient([
                 'timeout' => 10,
             ]);
-
             $response = $client->request('GET', $url, [
                 'headers' => ['Accept' => 'application/json'],
                 'http_errors' => false,
             ]);
-
             $body = (string) $response->getBody();
             $decoded = json_decode($body, true);
 
             if (!is_array($decoded)) {
                 throw new \RuntimeException('Unable to parse Shopee document API JSON response.');
+            }
+
+            // If the response directly returns the descriptor array from Shopee API
+            if (isset($decoded['api_name'])) {
+                return [
+                    'status_code' => $response->getStatusCode(),
+                    'data' => $decoded,
+                ];
             }
 
             return [
@@ -342,7 +362,6 @@ class Server
                 'method' => 'home',
             ],
         ];
-
         $resourceFiles = glob($this->projectRoot . '/src/Resources/*.php');
         foreach ($resourceFiles as $file) {
             $content = file_get_contents($file);
@@ -358,20 +377,12 @@ class Server
         }
 
         $this->documentIndex = $results;
-
         return $this->documentIndex;
     }
 
-    /**
-     * @param string $content
-     * @param string $resourceName
-     * @param string $sourceFile
-     * @return array<int, array<string, string>>
-     */
     private function extractResourceDocumentEntries($content, $resourceName, $sourceFile)
     {
         $entries = [];
-
         if (!preg_match_all('/\/\*\*(.*?)\*\/\s*public function\s+([a-zA-Z0-9_]+)\s*\(/s', $content, $matches, PREG_SET_ORDER)) {
             return $entries;
         }
@@ -405,10 +416,6 @@ class Server
         return $entries;
     }
 
-    /**
-     * @param string $docBlock
-     * @return string|null
-     */
     private function extractApiName($docBlock)
     {
         if (preg_match('/API:\s*(v2\.[a-z0-9_\.]+)/i', $docBlock, $match)) {
@@ -418,10 +425,6 @@ class Server
         return null;
     }
 
-    /**
-     * @param string $docBlock
-     * @return string
-     */
     private function extractDescription($docBlock)
     {
         $lines = preg_split('/\R/', $docBlock);
@@ -446,10 +449,6 @@ class Server
         return implode('. ', $descriptionLines) . '.';
     }
 
-    /**
-     * @param string $keyword
-     * @return string
-     */
     private function buildApiUrl($keyword)
     {
         if (preg_match('/^v2\./i', $keyword)) {
@@ -462,9 +461,6 @@ class Server
 
 $server = new Server(dirname(__DIR__));
 
-/**
- * Ghi message theo chuẩn MCP (Mỗi JSON object nằm trên một dòng)
- */
 function writeMessage(array $payload)
 {
     $json = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
@@ -472,19 +468,13 @@ function writeMessage(array $payload)
         return;
     }
 
-    // MCP Stdio chỉ cần một dòng JSON và kết thúc bằng dấu xuống dòng \n
     fwrite(STDOUT, $json."\n");
     fflush(STDOUT);
 }
 
-/**
- * Đọc message theo chuẩn MCP (Đọc từng dòng một)
- */
 function readMessage()
 {
-    // Đọc chính xác 1 dòng từ STDIN
     $line = fgets(STDIN);
-
     if ($line === false) {
         return null;
     }
@@ -494,7 +484,6 @@ function readMessage()
         return null;
     }
 
-    // Parse trực tiếp dòng đó thành array
     $decoded = json_decode($trimmed, true);
     if (!is_array($decoded)) {
         return null;
@@ -503,10 +492,8 @@ function readMessage()
     return $decoded;
 }
 
-// Vòng lặp xử lý request chính
 while (true) {
     $request = readMessage();
-
     if ($request === null) {
         if (feof(STDIN)) {
             exit(0);
@@ -519,7 +506,6 @@ while (true) {
     }
 
     $method = $request['method'];
-    // Xử lý các thông báo notification không cần ID
     if ($method === 'notifications/initialized' || $method === 'initialized') {
         continue;
     }
