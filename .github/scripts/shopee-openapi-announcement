@@ -55,6 +55,9 @@ $issue_body = <<<MARKDOWN
 {$markdownOutput}
 
 ---
+Announcement URL: https://open.shopee.com/announcements/{$announcement_id}
+
+---
 @junie-agent Please review the API changes described above. Focus **ONLY** on major updates such as adding new endpoints or removing/taking legacy APIs offline. You can safely ignore any other changes regarding request/response parameters or fields. Update the PHP code and create a new PR for review. Close issue if nothing changes applied.
 MARKDOWN;
 
