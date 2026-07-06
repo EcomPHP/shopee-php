@@ -27,7 +27,7 @@ $unique_flag = "[Shopee-ID:{$announcement_id}]";
 
 echo "Checking Issue for announcement ID: {$announcement_id}\n\n";
 // search issues command
-$command = sprintf('gh issue list --repo %s --search "repo:'.$repo.' is:issue %s"', escapeshellarg($repo), escapeshellarg($unique_flag));
+$command = sprintf('gh issue list --repo %s --state all --search "%s"', escapeshellarg($repo), escapeshellarg($unique_flag));
 exec($command, $output, $returnVar);
 
 if ($returnVar !== 0) {
