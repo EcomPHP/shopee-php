@@ -37,7 +37,7 @@ if ($returnVar !== 0) {
 
 if (count($output) > 0) {
     echo "Issue already exists for announcement ID: {$announcement_id}\n\n";
-    exit(1);
+    exit(0);
 }
 
 // get announcement content
