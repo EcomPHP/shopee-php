@@ -1,7 +1,11 @@
 #!/usr/bin/env php
 <?php
 
-require dirname(__DIR__).'/vendor/autoload.php';
+$autoloadPath = $GLOBALS['_composer_autoload_path']
+    ?? (file_exists(dirname(__DIR__).'/vendor/autoload.php')
+        ? dirname(__DIR__).'/vendor/autoload.php'
+        : dirname(__DIR__, 3).'/autoload.php');
+require $autoloadPath;
 
 use EcomPHP\Shopee\Client;
 use GuzzleHttp\Client as GuzzleHttpClient;

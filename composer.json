@@ -33,6 +33,7 @@
     }
   },
   "scripts": {
-    "test": "vendor/bin/phpunit"
+    "test": "vendor/bin/phpunit",
+    "mcp": "bin/shopee-mcp-server"
   }
 }
