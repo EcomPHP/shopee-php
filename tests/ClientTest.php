@@ -4,6 +4,7 @@ namespace EcomPHP\Shopee\Tests;
 
 use EcomPHP\Shopee\Client;
 use EcomPHP\Shopee\Errors\ShopeeException;
+use EcomPHP\Shopee\Resources\BrandPortal;
 use EcomPHP\Shopee\Resources\Shop;
 use PHPUnit\Framework\TestCase;
 
@@ -38,6 +39,19 @@ class ClientTest extends TestCase
         
         $client->setAccessToken($shop_id, $access_token);
         
+        // Since these are protected properties, we can't directly test them
+        // Instead, we'll test the behavior in other tests
+        $this->assertTrue(true);
+    }
+
+    public function testSetPrincipalAccessToken()
+    {
+        $client = new Client($this->partner_id, $this->partner_key);
+        $principal_id = '888777';
+        $access_token = 'test_principal_access_token';
+
+        $client->setPrincipalAccessToken($principal_id, $access_token);
+
         // Since these are protected properties, we can't directly test them
         // Instead, we'll test the behavior in other tests
         $this->assertTrue(true);
@@ -98,6 +112,57 @@ class ClientTest extends TestCase
         $shop = $client->Shop;
         
         $this->assertInstanceOf(Shop::class, $shop);
+    }
+
+    public function testBrandPortalResourceAccess()
+    {
+        $client = new Client($this->partner_id, $this->partner_key);
+        $brandPortal = $client->BrandPortal;
+
+        $this->assertInstanceOf(BrandPortal::class, $brandPortal);
+    }
+
+    public function testPrepareSignatureUsesPrincipalIdWhenPresent()
+    {
+        $client = new Client($this->partner_id, $this->partner_key);
+
+        $query = [
+            'timestamp' => 1710000000,
+            'access_token' => 'token_value',
+            'principal_id' => 123456,
+            'shop_id' => 654321,
+        ];
+
+        $client->prepareSignature('/api/v2/principal/get_shop_sales_performance_detail', $query);
+
+        $expected = hash_hmac(
+            'sha256',
+            intval($this->partner_id) . '/api/v2/principal/get_shop_sales_performance_detail1710000000token_value123456',
+            $this->partner_key
+        );
+
+        $this->assertEquals($expected, $query['sign']);
+    }
+
+    public function testPrepareSignatureUsesShopIdWhenPrincipalIdIsMissing()
+    {
+        $client = new Client($this->partner_id, $this->partner_key);
+
+        $query = [
+            'timestamp' => 1710000000,
+            'access_token' => 'token_value',
+            'shop_id' => 654321,
+        ];
+
+        $client->prepareSignature('/api/v2/order/get_order_list', $query);
+
+        $expected = hash_hmac(
+            'sha256',
+            intval($this->partner_id) . '/api/v2/order/get_order_list1710000000token_value654321',
+            $this->partner_key
+        );
+
+        $this->assertEquals($expected, $query['sign']);
     }
     
     public function testInvalidResourceAccess()

@@ -36,6 +36,7 @@ use EcomPHP\Shopee\Resources\Authorization;
 use EcomPHP\Shopee\Resources\Logistic;
 use EcomPHP\Shopee\Resources\Order;
 use EcomPHP\Shopee\Resources\Payment;
+use EcomPHP\Shopee\Resources\BrandPortal;
 use EcomPHP\Shopee\Resources\Product;
 use EcomPHP\Shopee\Resources\Shop;
 use Psr\Http\Message\RequestInterface;
@@ -48,6 +49,7 @@ use Psr\Http\Message\RequestInterface;
  * @property-read Logistic $Logistic
  * @property-read Order $Order
  * @property-read Payment $Payment
+ * @property-read BrandPortal $BrandPortal
  * @property-read Product $Product
  * @property-read Shop $Shop
  * @property-read FirstMile $FirstMile
@@ -74,6 +76,7 @@ class Client
         Logistic::class,
         Order::class,
         Payment::class,
+        BrandPortal::class,
         Product::class,
         Shop::class,
         FirstMile::class,
@@ -95,6 +98,7 @@ class Client
     protected $partner_key;
     protected $debug_mode = false;
     protected $shop_id;
+    protected $principal_id;
     protected $access_token;
 
     protected $china_region = false;
@@ -137,6 +141,14 @@ class Client
     public function setAccessToken($shop_id, $access_token)
     {
         $this->shop_id = intval($shop_id);
+        $this->principal_id = null;
+        $this->access_token = $access_token;
+    }
+
+    public function setPrincipalAccessToken($principal_id, $access_token)
+    {
+        $this->shop_id = null;
+        $this->principal_id = intval($principal_id);
         $this->access_token = $access_token;
     }
 
@@ -210,7 +222,9 @@ class Client
                 $query['access_token'] = $this->access_token;
             }
 
-            if ($this->shop_id) {
+            if ($this->principal_id) {
+                $query['principal_id'] = $this->principal_id;
+            } elseif ($this->shop_id) {
                 $query['shop_id'] = $this->shop_id;
             }
 
@@ -286,16 +300,18 @@ class Client
     {
         // remove access_token and shop_id on auth request
         if (preg_match('/^\/api\/v2\/auth\/(access_)?token\/get$/', $path)) {
-            unset($query['access_token'], $query['shop_id']);
+            unset($query['access_token'], $query['shop_id'], $query['principal_id']);
         }
 
         $query = array_merge([
             'timestamp' => time(),
             'access_token' => '',
             'shop_id' => '',
+            'principal_id' => '',
         ], $query);
 
-        $stringToBeSigned = $this->partnerId().  $path . $query['timestamp'] . $query['access_token'] . $query['shop_id'];
+        $identityId = $query['principal_id'] ?: $query['shop_id'];
+        $stringToBeSigned = $this->partnerId() . $path . $query['timestamp'] . $query['access_token'] . $identityId;
         $query['sign'] = hash_hmac('sha256', $stringToBeSigned, $this->partnerKey());
     }
 
