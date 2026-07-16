@@ -13,7 +13,7 @@ namespace EcomPHP\Shopee\Resources;
 use EcomPHP\Shopee\Resource;
 use GuzzleHttp\RequestOptions;
 
-class Principal extends Resource
+class BrandPortal extends Resource
 {
     /**
      * API: v2.principal.get_shop_sales_performance_detail

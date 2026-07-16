@@ -36,7 +36,7 @@ use EcomPHP\Shopee\Resources\Authorization;
 use EcomPHP\Shopee\Resources\Logistic;
 use EcomPHP\Shopee\Resources\Order;
 use EcomPHP\Shopee\Resources\Payment;
-use EcomPHP\Shopee\Resources\Principal;
+use EcomPHP\Shopee\Resources\BrandPortal;
 use EcomPHP\Shopee\Resources\Product;
 use EcomPHP\Shopee\Resources\Shop;
 use Psr\Http\Message\RequestInterface;
@@ -49,7 +49,7 @@ use Psr\Http\Message\RequestInterface;
  * @property-read Logistic $Logistic
  * @property-read Order $Order
  * @property-read Payment $Payment
- * @property-read Principal $Principal
+ * @property-read BrandPortal $BrandPortal
  * @property-read Product $Product
  * @property-read Shop $Shop
  * @property-read FirstMile $FirstMile
@@ -76,7 +76,7 @@ class Client
         Logistic::class,
         Order::class,
         Payment::class,
-        Principal::class,
+        BrandPortal::class,
         Product::class,
         Shop::class,
         FirstMile::class,

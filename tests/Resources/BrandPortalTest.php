@@ -3,11 +3,11 @@
 namespace EcomPHP\Shopee\Tests\Resources;
 
 use EcomPHP\Shopee\Client;
-use EcomPHP\Shopee\Resources\Principal;
+use EcomPHP\Shopee\Resources\BrandPortal;
 use GuzzleHttp\RequestOptions;
 use PHPUnit\Framework\TestCase;
 
-class PrincipalTest extends TestCase
+class BrandPortalTest extends TestCase
 {
     /**
      * @var \PHPUnit\Framework\MockObject\MockObject|Client
@@ -15,15 +15,15 @@ class PrincipalTest extends TestCase
     private $client;
 
     /**
-     * @var Principal
+     * @var BrandPortal
      */
-    private $principal;
+    private $brandPortal;
 
     protected function setUp(): void
     {
         $this->client = $this->createMock(Client::class);
-        $this->principal = new Principal();
-        $this->principal->useApiClient($this->client);
+        $this->brandPortal = new BrandPortal();
+        $this->brandPortal->useApiClient($this->client);
     }
 
     public function testGetShopSalesPerformanceDetail()
@@ -38,7 +38,7 @@ class PrincipalTest extends TestCase
             ])
             ->willReturn($expectedResponse);
 
-        $result = $this->principal->getShopSalesPerformanceDetail($params);
+        $result = $this->brandPortal->getShopSalesPerformanceDetail($params);
 
         $this->assertEquals($expectedResponse, $result);
     }
@@ -55,7 +55,7 @@ class PrincipalTest extends TestCase
             ])
             ->willReturn($expectedResponse);
 
-        $result = $this->principal->getPrincipalSalesPerformanceDetail($params);
+        $result = $this->brandPortal->getPrincipalSalesPerformanceDetail($params);
 
         $this->assertEquals($expectedResponse, $result);
     }
@@ -72,7 +72,7 @@ class PrincipalTest extends TestCase
             ])
             ->willReturn($expectedResponse);
 
-        $result = $this->principal->getShopAffiliatePerformance($params);
+        $result = $this->brandPortal->getShopAffiliatePerformance($params);
 
         $this->assertEquals($expectedResponse, $result);
     }
@@ -89,7 +89,7 @@ class PrincipalTest extends TestCase
             ])
             ->willReturn($expectedResponse);
 
-        $result = $this->principal->getPrincipalAffiliatePerformance($params);
+        $result = $this->brandPortal->getPrincipalAffiliatePerformance($params);
 
         $this->assertEquals($expectedResponse, $result);
     }
@@ -106,7 +106,7 @@ class PrincipalTest extends TestCase
             ])
             ->willReturn($expectedResponse);
 
-        $result = $this->principal->getContentAffiliatePerformance($params);
+        $result = $this->brandPortal->getContentAffiliatePerformance($params);
 
         $this->assertEquals($expectedResponse, $result);
     }
@@ -123,7 +123,7 @@ class PrincipalTest extends TestCase
             ])
             ->willReturn($expectedResponse);
 
-        $result = $this->principal->getShopLivestreamPerformance($params);
+        $result = $this->brandPortal->getShopLivestreamPerformance($params);
 
         $this->assertEquals($expectedResponse, $result);
     }
@@ -140,7 +140,7 @@ class PrincipalTest extends TestCase
             ])
             ->willReturn($expectedResponse);
 
-        $result = $this->principal->getPrincipalLivestreamPerformance($params);
+        $result = $this->brandPortal->getPrincipalLivestreamPerformance($params);
 
         $this->assertEquals($expectedResponse, $result);
     }
@@ -157,7 +157,7 @@ class PrincipalTest extends TestCase
             ])
             ->willReturn($expectedResponse);
 
-        $result = $this->principal->getSessionLivestreamPerformance($params);
+        $result = $this->brandPortal->getSessionLivestreamPerformance($params);
 
         $this->assertEquals($expectedResponse, $result);
     }
@@ -174,7 +174,7 @@ class PrincipalTest extends TestCase
             ])
             ->willReturn($expectedResponse);
 
-        $result = $this->principal->getShopVideoPerformance($params);
+        $result = $this->brandPortal->getShopVideoPerformance($params);
 
         $this->assertEquals($expectedResponse, $result);
     }
@@ -191,7 +191,7 @@ class PrincipalTest extends TestCase
             ])
             ->willReturn($expectedResponse);
 
-        $result = $this->principal->getPrincipalVideoPerformance($params);
+        $result = $this->brandPortal->getPrincipalVideoPerformance($params);
 
         $this->assertEquals($expectedResponse, $result);
     }
@@ -208,7 +208,7 @@ class PrincipalTest extends TestCase
             ])
             ->willReturn($expectedResponse);
 
-        $result = $this->principal->getClipVideoPerformance($params);
+        $result = $this->brandPortal->getClipVideoPerformance($params);
 
         $this->assertEquals($expectedResponse, $result);
     }
