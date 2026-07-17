@@ -325,4 +325,22 @@ class Client
                 return 'https://partner.shopeemobile.com/api/v2/';
         }
     }
+
+    public function cancellationAuthorizationBaseUrl()
+    {
+        switch (($this->brazil_region << 2) + ($this->china_region << 1) + $this->debug_mode) {
+            case 5:
+            case 1:
+                return 'https://open.sandbox.test-stable.shopee.com/cancel_auth';
+            case 2:
+                return 'https://open.shopee.cn/cancel_auth';
+            case 3:
+                return 'https://open.sandbox.test-stable.shopee.cn/cancel_auth';
+            case 4:
+                return 'https://open.shopee.com.br/cancel_auth';
+            case 0:
+            default:
+                return 'https://open.shopee.com/cancel_auth';
+        }
+    }
 }
