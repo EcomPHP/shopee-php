@@ -62,4 +62,23 @@ class Auth
         header('Location: '.$authorizationUrl);
         exit;
     }
+
+    public function createCancelAuthRequest($redirect_uri, $return_url = false)
+    {
+        $query = [
+            'partner_id' => $this->client->partnerId(),
+            'redirect_uri' => $redirect_uri,
+            'auth_type' => 'seller',
+            'response_type' => 'code',
+        ];
+
+        $cancelAuthUrl = $this->client->cancellationAuthorizationBaseUrl() . '?' . http_build_query($query);
+
+        if ($return_url) {
+            return $cancelAuthUrl;
+        }
+
+        header('Location: '.$cancelAuthUrl);
+        exit;
+    }
 }
