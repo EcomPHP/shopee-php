@@ -5,6 +5,7 @@ namespace EcomPHP\Shopee\Tests;
 use EcomPHP\Shopee\Client;
 use EcomPHP\Shopee\Errors\ShopeeException;
 use EcomPHP\Shopee\Resources\BrandPortal;
+use EcomPHP\Shopee\Resources\Sbs;
 use EcomPHP\Shopee\Resources\Shop;
 use PHPUnit\Framework\TestCase;
 
@@ -120,6 +121,14 @@ class ClientTest extends TestCase
         $brandPortal = $client->BrandPortal;
 
         $this->assertInstanceOf(BrandPortal::class, $brandPortal);
+    }
+
+    public function testSbsResourceAccess()
+    {
+        $client = new Client($this->partner_id, $this->partner_key);
+        $sbs = $client->Sbs;
+
+        $this->assertInstanceOf(Sbs::class, $sbs);
     }
 
     public function testPrepareSignatureUsesPrincipalIdWhenPresent()
