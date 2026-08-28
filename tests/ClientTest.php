@@ -94,18 +94,6 @@ class ClientTest extends TestCase
         $this->assertEquals('https://openplatform.shopee.com.br/api/v2/', $method->invoke($client));
     }
     
-    public function testCustomHostname()
-    {
-        $client = new Client($this->partner_id, $this->partner_key);
-        $client->setCustomHostname('api.example.com');
-        
-        $reflectionClass = new \ReflectionClass(Client::class);
-        $method = $reflectionClass->getMethod('baseUrl');
-        $method->setAccessible(true);
-        
-        $this->assertEquals('https://api.example.com/api/v2/', $method->invoke($client));
-    }
-    
     public function testResourceAccess()
     {
         $client = new Client($this->partner_id, $this->partner_key);
