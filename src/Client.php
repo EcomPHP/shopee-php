@@ -23,6 +23,7 @@ use EcomPHP\Shopee\Resources\MediaSpace;
 use EcomPHP\Shopee\Resources\Merchant;
 use EcomPHP\Shopee\Resources\Push;
 use EcomPHP\Shopee\Resources\Returns;
+use EcomPHP\Shopee\Resources\Sbs;
 use EcomPHP\Shopee\Resources\ShopCategory;
 use EcomPHP\Shopee\Resources\ShopFlashSale;
 use EcomPHP\Shopee\Resources\TopPicks;
@@ -64,6 +65,7 @@ use Psr\Http\Message\RequestInterface;
  * @property-read MediaSpace $MediaSpace
  * @property-read Merchant $Merchant
  * @property-read Push $Push
+ * @property-read Sbs $Sbs
  * @property-read ShopFlashSale $ShopFlashSale
  */
 class Client
@@ -91,6 +93,7 @@ class Client
         MediaSpace::class,
         Merchant::class,
         Push::class,
+        Sbs::class,
         ShopFlashSale::class,
     ];
 
